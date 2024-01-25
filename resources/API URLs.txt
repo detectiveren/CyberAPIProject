@@ -1,0 +1,7 @@
+( FOR WINDOWS TESTING )
+http://127.0.0.1:8000/secure-api/say-hi?name= # Say Hello API URL (encrypted)
+http://127.0.0.1:8000/unsecure-api/say-hi?name= # Say Hello API URL
+http://127.0.0.1:8000/secure-api/age-prediction?name= # Age Prediction API URL (encrypted)
+http://127.0.0.1:8000/unsecure-api/age-prediction?name= # Age Prediction API URL
+http://127.0.0.1:8000/secure-api/email?email= # Email Login (encrypted)
+http://127.0.0.1:8000/unsecure-api/email?email= # Email Login

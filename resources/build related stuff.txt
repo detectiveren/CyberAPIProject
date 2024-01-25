@@ -1,0 +1,6 @@
+how to update requirements.txt
+https://www.jetbrains.com/help/pycharm/managing-dependencies.html
+
+install.sh will build the API Project
+
+start.sh will run the API Project
