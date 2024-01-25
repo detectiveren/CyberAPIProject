@@ -38,3 +38,21 @@ Steps to running and testing secure API:
 All learning materials used: 
 https://www.zyte.com/blog/json-parsing-with-python/
 https://anderfernandez.com/en/blog/how-to-create-api-python/
+
+( FOR LINUX TESTING )
+
+Run either unsecure_api.py or secure_api.py in Ubuntu Server (ensure the host is 10.0.2.4)
+
+Go to Kali Linux, open up main.py (ensure all API URLs are routed to 10.0.2.4)
+
+Select the API that you opened up in Ubuntu to test
+
+Open up Wireshark to track traffic, display filter to "http"
+
+On main.py, interact with the API you have selected 
+
+( WEB TESTING )
+
+Whether you are using Windows or Linux, to test the web versions of interactions between the client and API, go to http://127.0.0.1:8000/ if you are on Windows or http://10.0.2.4:8000/ if you are on Linux 
+
+On the web page, interact with the API that is running
