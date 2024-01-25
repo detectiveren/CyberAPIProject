@@ -1,7 +1,7 @@
 # Name: Eduardo Manuel Costa Moreira
 # Student ID: MOR21500097
 # Date: 17/01/2024
-from flask import Flask, jsonify, request, send_file, redirect
+from flask import Flask, jsonify, request, send_file, redirect, render_template
 from flask_cors import CORS, cross_origin
 import random
 
@@ -9,6 +9,36 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+# These app routes below are for the web pages that will interact with the API
+
+# Insecure API Web Page Routes
+
+
+@app.route('/')
+@cross_origin()
+def homePage():
+    return render_template('index.html')
+
+
+@app.route('/insecure/sayhello')
+@cross_origin()
+def sayHelloPage():
+    return render_template('/html/insecure/sayhello.html')
+
+
+@app.route('/insecure/ageprediction')
+@cross_origin()
+def agePredictionPage():
+    return render_template('/html/insecure/ageprediction.html')
+
+
+@app.route('/insecure/email')
+@cross_origin()
+def emailPage():
+    return render_template('/html/insecure/emailLogin.html')
+
+
+# This app routes below are the API endpoints that the command line and web pages will interact with
 
 @app.route('/unsecure-api/say-hi', methods=['GET'])  # Set up a URL route where it will take a function
 @cross_origin() # Allow for Cross Origin (this allows for CORS which modern browsers need)
@@ -68,5 +98,7 @@ def loggedIn():
         return redirect('/unsecure-api/email?email=' + email_account, code=302) # If the login is invalid
 
 
+# Re-route all of these when deploying to linux
+# app.run(debug=True, host='10.0.2.4', port=8000) for example
 if __name__ == '__main__':  # This is where the app begins
     app.run(debug=True, port=8000)

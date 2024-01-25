@@ -12,10 +12,11 @@ projectDesc = ("A Cyber-security API Project that will show the difference betwe
                "an unsecure API and secure API (using encryption) to show how API Security is important \n"
                "in today's world")
 projectCreator = "Eduardo Manuel Costa Moreira"
-projectLatestUpdate = "17/01/2024"
-milestoneNumber = "Milestone 7"
+projectLatestUpdate = "19/01/2024"
+milestoneNumber = "Milestone 8"
 
 # API URLs
+# REMINDER: Re-route all of these when deploying to linux
 secure_api_local_say_hi = "http://127.0.0.1:8000/secure-api/say-hi?name="
 unsecure_api_local_say_hi = "http://127.0.0.1:8000/unsecure-api/say-hi?name="
 secure_api_local_predict_age = "http://127.0.0.1:8000/secure-api/age-prediction?name="

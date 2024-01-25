@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1.0">
+        <Title>Email API</Title>
+    </head>
+
+    <body>
+        <h1>Enter your email and the API will attempt to log you in!</h1>
+        <p>Ensure that secure_api.py is running</p>
+        <p>NOTE TO SELF: Make sure to organise the html files into secure/insecure for the APIs</p>
+        <label for="txtName">Enter your name</label>
+        <input type="text" id="txtName"/>
+        <button type="button" onclick="sendName()">Log In</button>
+        <p id="response"></p>
+        <div id="resultContainer"></div>
+        <!-- This is how flask finds the JS scripts for the html files -->
+        <script src="{{url_for('static', filename='js/emailAccount_secure.js')}}"></script>
+    </body>
+</html>

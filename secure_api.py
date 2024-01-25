@@ -1,9 +1,12 @@
 # Name: Eduardo Manuel Costa Moreira
 # Student ID: MOR21500097
 # Date: 17/01/2024
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, render_template
+from flask_cors import CORS, cross_origin
 import random
 from cryptography.fernet import Fernet
+
+# DO NOT FORGET TO ADD CORS TO THIS API
 
 app = Flask(__name__)
 
@@ -17,7 +20,38 @@ def generateKey(data):
     return token, key  # return the token which contains the data and the data_key which contains the key
 
 
+# These app routes below are for the web pages that will interact with the API
+
+# Secure API Web Page Routes
+
+@app.route('/')
+@cross_origin()
+def homePage():
+    return render_template('index.html')
+
+
+@app.route('/secure/sayhello')
+@cross_origin()
+def sayHelloPage():
+    return render_template('/html/secure/sayhello.html')
+
+
+@app.route('/secure/ageprediction')
+@cross_origin()
+def agePredictionPage():
+    return render_template('/html/secure/ageprediction.html')
+
+
+@app.route('/secure/email')
+@cross_origin()
+def emailPage():
+    return render_template('/html/secure/emailLogin.html')
+
+
+# This app routes below are the API endpoints that the command line and web pages will interact with
+
 @app.route('/secure-api/say-hi', methods=['GET']) # Set up a URL route where it will take a function
+@cross_origin()
 def helloTest():
     name = request.args.get('name') # get the name of the user from "?name="
 
@@ -35,6 +69,7 @@ def helloTest():
 
 
 @app.route('/secure-api/age-prediction', methods=['GET'])
+@cross_origin()
 def agePrediction():
     name = request.args.get('name')
 
@@ -51,6 +86,7 @@ def agePrediction():
 
 
 @app.route('/secure-api/email', methods=['GET'])
+@cross_origin()
 def emailLogIn():
     email = request.args.get('email')
     if email is None:
@@ -68,5 +104,7 @@ def emailLogIn():
     return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
 
 
+# Re-route all of these when deploying to linux
+# app.run(debug=True, host='10.0.2.4', port=8000) for example
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
