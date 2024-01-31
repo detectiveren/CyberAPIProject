@@ -1,6 +1,6 @@
 # Name: Eduardo Manuel Costa Moreira
 # Student ID: MOR21500097
-# Date: 17/01/2024
+# Date: 31/01/2024
 from flask import Flask, jsonify, request, send_file, render_template
 from flask_cors import CORS, cross_origin
 import random
@@ -46,6 +46,12 @@ def agePredictionPage():
 @cross_origin()
 def emailPage():
     return render_template('/html/secure/emailLogin.html')
+
+
+@app.route('/secure/sampleSensitiveData')
+@cross_origin()
+def sampleDataPage():
+    return render_template('/html/secure/sampleSensitiveData.html')
 
 
 # This app routes below are the API endpoints that the command line and web pages will interact with
@@ -101,6 +107,30 @@ def emailLogIn():
         response = "The email " + email + " is not found on the database"
         data = generateKey(response)
 
+    return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
+
+
+@app.route('/secure-api/sampleData', methods=['GET'])
+@cross_origin()
+def sampleData():
+    sampleDataFile = request.args.get('sampleDataNumber') # Grab the number input
+
+    sampleDataFileNumber = int(sampleDataFile) # Convert it into an integer
+
+    try:
+        with open("data/sampleData.txt", "r") as f: # Open the text file containing the sample data
+            for i, line in enumerate(f, 1):
+                if i == sampleDataFileNumber: # If i equals the number from sampleDataFileNumber, return the line
+                    response = line
+                    data = generateKey(response)
+                    return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
+    except ValueError:
+        response = "Something went wrong with the API"
+        data = generateKey(response)
+        return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
+
+    response = "Searched the text database and nothing was found" # If nothing was found then return this variable
+    data = generateKey(response)
     return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
 
 

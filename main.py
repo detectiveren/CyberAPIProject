@@ -1,19 +1,20 @@
 # Name: Eduardo Manuel Costa Moreira
 # Student ID: MOR21500097
-# Date: 17/01/2024
+# Date: 31/01/2024
 
 # Here's where imports are handled
 import requests
 import communicate_with_unsecure_api
 import communicate_with_secure_api
+import decryptData
 
 projectName = "Cyber API Security Project"
 projectDesc = ("A Cyber-security API Project that will show the difference between \n"
                "an unsecure API and secure API (using encryption) to show how API Security is important \n"
                "in today's world")
 projectCreator = "Eduardo Manuel Costa Moreira"
-projectLatestUpdate = "19/01/2024"
-milestoneNumber = "Milestone 8"
+projectLatestUpdate = "31/01/2024"
+milestoneNumber = "Milestone 9"
 
 # API URLs
 # REMINDER: Re-route all of these when deploying to linux
@@ -23,6 +24,8 @@ secure_api_local_predict_age = "http://127.0.0.1:8000/secure-api/age-prediction?
 unsecure_api_local_predict_age = "http://127.0.0.1:8000/unsecure-api/age-prediction?name="
 secure_api_local_email = "http://127.0.0.1:8000/secure-api/email?email="
 unsecure_api_local_email = "http://127.0.0.1:8000/unsecure-api/email?email="
+secure_api_test_sample_data = "http://127.0.0.1:8000/secure-api/sampleData?sampleDataNumber="
+unsecure_api_test_sample_data = "http://127.0.0.1:8000/unsecure-api/sampleData?sampleDataNumber="
 
 
 def welcomeMessage():  # This is the welcome message
@@ -38,8 +41,9 @@ def menu():
     welcomeMessage() # Display the welcome message
     print("1. Unsecure API")
     print("2. Secure API")
-    print("3. Exit")
-    while user != 3:
+    print("3. Decrypt Data")
+    print("4. Exit")
+    while user != 4:
         user = int(input("Enter an API application to use (Type the number): "))
 
         if user == 1:
@@ -48,6 +52,7 @@ def menu():
             print("1. Predict Age by name")
             print("2. Say Hi to your name")
             print("3. Test Login")
+            print("4. Test Sample Sensitive Data")
             user = int(input("Enter the type of Insecure API you want to use (Type the number): "))
             if user == 1:
                 name = input("Enter a name and it will predict your age: ")
@@ -60,12 +65,17 @@ def menu():
                 user = ""
                 email = input("Enter email to login: ")
                 communicate_with_unsecure_api.API(unsecure_api_local_email + email)
+            if user == 4:
+                user = ""
+                number = input("Enter a number between 1 to 15: ")
+                communicate_with_unsecure_api.API(unsecure_api_test_sample_data + number)
         if user == 2:
             print("NOTE: Ensure secure_api.py is running")
             print("Do you want to Predict Age or have the API say Hi (more will be added later)")
             print("1. Predict Age by name")
             print("2. Say Hi to your name")
             print("3. Test Login")
+            print("4. Test Sample Sensitive Data")
             user = int(input("Enter the type of Secure API you want to use (Type the number): "))
             if user == 1:
                 name = input("Enter a name and it will predict your age: ")
@@ -78,6 +88,17 @@ def menu():
                 user = ""
                 email = input("Enter email to login: ") # Email login at the moment, password will be added later
                 communicate_with_secure_api.API(secure_api_local_email + email)
+            if user == 4:
+                user = ""
+                number = input("Enter a number between 1 to 15: ")
+                communicate_with_secure_api.API(secure_api_test_sample_data + number)
+
+        if user == 3:
+            print("Here you can decrypt the data from the secure API")
+            user_key = input("Enter the key: ")
+            user_token = input("Enter the token: ")
+            local_response = decryptData.decryptData(user_key, user_token)
+            print(local_response)
 
 
 

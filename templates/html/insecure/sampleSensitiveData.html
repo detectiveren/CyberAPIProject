@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1.0">
+        <Title>Sample Sensitive Data API</Title>
+    </head>
+
+    <body>
+        <h1>Enter your name and the API will say Hi!</h1>
+        <p>Ensure that unsecure_api.py is running</p>
+        <p>NOTE TO SELF: Make sure to organise the html files into secure/insecure for the APIs</p>
+        <button type="button" onclick="randomData()">Random Test Sensitive Data</button>
+        <p id="response"></p>
+        <div id="resultContainer"></div>
+        <!-- This is how flask finds the JS scripts for the html files -->
+        <script src="{{url_for('static', filename='js/sampleSensitiveData_insecure.js')}}"></script>
+    </body>
+</html>
