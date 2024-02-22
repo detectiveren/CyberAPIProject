@@ -1,0 +1,21 @@
+body {
+    background-color: black;
+}
+
+h1, h2, h3, p, label, a {
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+div.center {
+    margin: auto;
+    width: 325px;
+    color: white;
+}
+
+ul, li {
+    margin: auto;
+    width: 325px;
+}
+

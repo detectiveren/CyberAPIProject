@@ -1,10 +1,12 @@
 # Name: Eduardo Manuel Costa Moreira
 # Student ID: MOR21500097
-# Date: 31/01/2024
+# Date: 22/02/2024
 from flask import Flask, jsonify, request, send_file, render_template
 from flask_cors import CORS, cross_origin
 import random
 from cryptography.fernet import Fernet
+
+# Deployable on Windows, Mac and Linux
 
 # DO NOT FORGET TO ADD CORS TO THIS API
 

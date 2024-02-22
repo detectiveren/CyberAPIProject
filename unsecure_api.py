@@ -5,6 +5,8 @@ from flask import Flask, jsonify, request, send_file, redirect, render_template
 from flask_cors import CORS, cross_origin
 import random
 
+# Deployable on Windows, Mac and Linux
+
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'

@@ -1,6 +1,6 @@
 # Name: Eduardo Manuel Costa Moreira
 # Student ID: MOR21500097
-# Date: 31/01/2024
+# Date: 22/02/2024
 
 # Here's where imports are handled
 import requests
@@ -13,8 +13,8 @@ projectDesc = ("A Cyber-security API Project that will show the difference betwe
                "an unsecure API and secure API (using encryption) to show how API Security is important \n"
                "in today's world")
 projectCreator = "Eduardo Manuel Costa Moreira"
-projectLatestUpdate = "31/01/2024"
-milestoneNumber = "Milestone 9"
+projectLatestUpdate = "22/02/2024"
+milestoneNumber = "Milestone 11"
 
 # API URLs
 # REMINDER: Re-route all of these when deploying to linux
