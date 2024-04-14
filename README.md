@@ -41,9 +41,9 @@ https://anderfernandez.com/en/blog/how-to-create-api-python/
 
 ( FOR LINUX TESTING )
 
-Run either unsecure_api.py or secure_api.py in Ubuntu Server (ensure the host is 10.0.2.4)
+Run either unsecure_api.py or secure_api.py in Ubuntu Server (ensure the host is 10.0.2.5)
 
-Go to Kali Linux, open up main.py (ensure all API URLs are routed to 10.0.2.4)
+Go to Kali Linux, open up main.py (ensure all API URLs are routed to 10.0.2.5)
 
 Select the API that you opened up in Ubuntu to test
 
@@ -53,6 +53,12 @@ On main.py, interact with the API you have selected
 
 ( WEB TESTING )
 
-Whether you are using Windows or Linux, to test the web versions of interactions between the client and API, go to http://127.0.0.1:8000/ if you are on Windows or http://10.0.2.4:8000/ if you are on Linux 
+Ensure all the JS files have the response variable fetch URL changed to the host if you are using linux
+
+For example in ```sampleSensitiveData_secure.js```, change the following ```const response = await fetch('http://127.0.0.1:8000/secure-api/sampleData?sampleDataNumber=' + num, { method: 'get'});``` to ```const response = await fetch('http://10.0.2.5:8000/secure-api/sampleData?sampleDataNumber=' + num, { method: 'get'});```
+
+Also like the above, make sure both unsecure_api.py and secure_api.py have the correct host in the code depending on the platform, the host is 10.0.0.5 for Ubuntu Server
+
+Whether you are using Windows or Linux, to test the web versions of interactions between the client and API, go to http://127.0.0.1:8000/ if you are on Windows or http://10.0.2.5:8000/ if you are on Linux 
 
 On the web page, interact with the API that is running

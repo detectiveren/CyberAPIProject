@@ -4,7 +4,7 @@ async function sendName() {
 
     try {
         // Make an asynchronous request to the API endpoint
-        // Re-route this to 'http://10.0.2.4:8000/secure-api/email?email=' when deploying to linux
+        // Re-route this to 'http://10.0.2.5:8000/secure-api/email?email=' when deploying to linux
         const response = await fetch('http://127.0.0.1:8000/secure-api/email?email=' + email, { method: 'get'});
 
         // Check if the request was successful (status code 200)

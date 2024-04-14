@@ -8,7 +8,7 @@ async function randomData() {
 
     try {
         // Make an asynchronous request to the API endpoint
-        // Re-route this to 'http://10.0.2.4:8000/unsecure-api/say-hi?name=' when deploying to linux
+        // Re-route this to 'http://10.0.2.5:8000/unsecure-api/say-hi?name=' when deploying to linux
         const response = await fetch('http://127.0.0.1:8000/secure-api/sampleData?sampleDataNumber=' + num, { method: 'get'});
 
         // Check if the request was successful (status code 200)
