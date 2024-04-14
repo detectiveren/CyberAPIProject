@@ -62,3 +62,9 @@ Also like the above, make sure both unsecure_api.py and secure_api.py have the c
 Whether you are using Windows or Linux, to test the web versions of interactions between the client and API, go to http://127.0.0.1:8000/ if you are on Windows or http://10.0.2.5:8000/ if you are on Linux 
 
 On the web page, interact with the API that is running
+
+( IMPORTANT NOTES )
+
+communicate_with_secure_api.py no longer works at the moment as it used to use Fernet to decrypt the encrypted data however Fernet is no longer being used in this project, instead the data is encrypted in AES (Advanced Encryption Standard) and the python script will be changed to support that soon
+
+decryptData.py no longer works for the same reason
