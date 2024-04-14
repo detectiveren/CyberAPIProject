@@ -56,7 +56,7 @@ def agePredictionPage():
 @app.route('/secure/email')
 @cross_origin()
 def emailPage():
-    return render_template('/html/secure/emailLogin.html')
+    return render_template('/html/secure/emailLogIn.html')
 
 
 @app.route('/secure/sampleSensitiveData')

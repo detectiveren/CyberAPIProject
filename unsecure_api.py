@@ -11,6 +11,7 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+
 # These app routes below are for the web pages that will interact with the API
 
 # Insecure API Web Page Routes
@@ -37,13 +38,19 @@ def agePredictionPage():
 @app.route('/insecure/email')
 @cross_origin()
 def emailPage():
-    return render_template('/html/insecure/emailLogin.html')
+    return render_template('/html/insecure/emailLogIn.html')
+
+
+@app.route('/insecure/sampleSensitiveData')
+@cross_origin()
+def sampleSensitiveDataPage():
+    return render_template('html/insecure/sampleSensitiveData.html')
 
 
 # This app routes below are the API endpoints that the command line and web pages will interact with
 
 @app.route('/unsecure-api/say-hi', methods=['GET'])  # Set up a URL route where it will take a function
-@cross_origin() # Allow for Cross Origin (this allows for CORS which modern browsers need)
+@cross_origin()  # Allow for Cross Origin (this allows for CORS which modern browsers need)
 def helloTest():
     name = request.args.get('name')  # get the name of the user from "?name="
 
@@ -93,11 +100,35 @@ def emailLogIn():
 def loggedIn():
     email_account = request.args.get('emailAccount')
 
-    if email_account == "eddy@gmail.com": # If the login is valid
+    if email_account == "eddy@gmail.com":  # If the login is valid
         text = "You have logged in successfully to " + email_account
         return text
     else:
-        return redirect('/unsecure-api/email?email=' + email_account, code=302) # If the login is invalid
+        return redirect('/unsecure-api/email?email=' + email_account, code=302)  # If the login is invalid
+
+
+@app.route('/unsecure-api/sampleData', methods=['GET'])
+@cross_origin()
+def sampleData():
+    sampleDataFile = request.args.get('sampleDataNumber')  # Grab the number input
+
+    sampleDataFileNumber = int(sampleDataFile)  # Convert it into an integer
+
+    try:
+        with open("data/sampleData.txt", "r") as f:  # Open the text file containing the sample data
+            for i, line in enumerate(f, 1):
+                if i == sampleDataFileNumber:  # If i equals the number from sampleDataFileNumber, return the line
+                    response = line
+
+                    return response
+    except ValueError:
+        response = "Something went wrong with the API"
+
+        return response
+
+    response = "Searched the text database and nothing was found"  # If nothing was found then return this variable
+
+    return response
 
 
 # Re-route all of these when deploying to linux
