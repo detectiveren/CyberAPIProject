@@ -16,9 +16,15 @@
             <input type="text" id="txtName"/>
             <button type="button" onclick="sendName()">Say Hello</button>
             <p id="response"></p>
+            <p>The response will be sent by the API</p>
             <div id="resultContainer"></div>
+            <button id="decryptButton">Decrypt Message</button>
+            <p>This will be decrypted locally</p>
+            <p id="decryptedMessage"></p>
         </div>
         <!-- This is how flask finds the JS scripts for the html files -->
         <script src="{{url_for('static', filename='js/sayHello_secure.js')}}"></script>
+        <script src="{{url_for('static', filename='js/decryptData.js')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     </body>
 </html>

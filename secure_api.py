@@ -3,8 +3,9 @@
 # Date: 22/02/2024
 from flask import Flask, jsonify, request, send_file, render_template
 from flask_cors import CORS, cross_origin
-import random
-from cryptography.fernet import Fernet
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+import random, base64
 
 # Deployable on Windows, Mac and Linux
 
@@ -13,13 +14,21 @@ from cryptography.fernet import Fernet
 app = Flask(__name__)
 
 
-def generateKey(data):
-    data = bytes(str(data), 'utf-8')  # Convert the data into string then convert it into bytes
-    key = Fernet.generate_key()  # Generate the key that is the only thing that can encrypt/decrypt the data
-    data_key = Fernet(key)  # Put the key into a fernet in the data_key variable, the message that gets
-    # encrypted with this key cannot be seen unless decrypted with this key
-    token = data_key.encrypt(data)  # Encrypt the data using the key into the token variable
-    return token, key  # return the token which contains the data and the data_key which contains the key
+# Fernet will no longer be used as JavaScript does not support it properly, therefore the change to AES
+# encryption and decryption was necessary
+
+def newGenerateKey(data):
+    data = bytes(str(data), 'utf-8')
+    key = get_random_bytes(16)  # Generate a 16-byte (128-bit) AES key
+    cipher = AES.new(key, AES.MODE_ECB)  # Create an AES cipher object in ECB mode
+    # Pad the data to be a multiple of 16 bytes (AES block size)
+    padded_data = data + b"\0" * (AES.block_size - len(data) % AES.block_size)
+    # Encrypt the padded data using AES
+    encrypted_data = cipher.encrypt(padded_data)
+    # Base64 encode the encrypted data and key
+    encrypted_data_b64 = base64.b64encode(encrypted_data).decode('utf-8')
+    key_b64 = base64.b64encode(key).decode('utf-8')
+    return encrypted_data_b64, key_b64
 
 
 # These app routes below are for the web pages that will interact with the API
@@ -58,22 +67,20 @@ def sampleDataPage():
 
 # This app routes below are the API endpoints that the command line and web pages will interact with
 
-@app.route('/secure-api/say-hi', methods=['GET']) # Set up a URL route where it will take a function
+@app.route('/secure-api/say-hi', methods=['GET'])  # Set up a URL route where it will take a function
 @cross_origin()
 def helloTest():
-    name = request.args.get('name') # get the name of the user from "?name="
+    name = request.args.get('name')  # get the name of the user from "?name="
 
     if name is None:
-        response = "Hello!" # Put the string "Hello" in response
-        data = generateKey(response) # Encrypt the message
-        text = [str(data[0]), str(data[1])]
+        response = "Hello!"  # Put the string "Hello" in response
 
     else:
-        response = 'Hello ' + name + '!' # Put the string along with the name in the response variable
-        data = generateKey(response)
-        text = [str(data[0]), str(data[1])]
+        response = 'Hello ' + name + '!'  # Put the string along with the name in the response variable
 
-    return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
+    encrypted_data_b64, key_b64 = newGenerateKey(response)
+
+    return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
 
 
 @app.route('/secure-api/age-prediction', methods=['GET'])
@@ -83,14 +90,14 @@ def agePrediction():
 
     if name is None:
         response = "You didn't insert a name!"
-        data = generateKey(response)
 
     else:
-        age = random.randint(0, 100) # Generate a random number
+        age = random.randint(0, 100)  # Generate a random number
         response = 'Hello ' + name + "!" + " Your predicted age is: " + str(age)
-        data = generateKey(response)
 
-    return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
+    encrypted_data_b64, key_b64 = newGenerateKey(response)
+
+    return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
 
 
 @app.route('/secure-api/email', methods=['GET'])
@@ -99,41 +106,43 @@ def emailLogIn():
     email = request.args.get('email')
     if email is None:
         response = "You didn't input an email, invalid login"
-        data = generateKey(response)
 
     elif email == "eddy@gmail.com":
         response = "You have logged in successfully to " + email
-        data = generateKey(response)
 
     else:
         response = "The email " + email + " is not found on the database"
-        data = generateKey(response)
 
-    return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
+    encrypted_data_b64, key_b64 = newGenerateKey(response)
+
+    return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
 
 
 @app.route('/secure-api/sampleData', methods=['GET'])
 @cross_origin()
 def sampleData():
-    sampleDataFile = request.args.get('sampleDataNumber') # Grab the number input
+    sampleDataFile = request.args.get('sampleDataNumber')  # Grab the number input
 
-    sampleDataFileNumber = int(sampleDataFile) # Convert it into an integer
+    sampleDataFileNumber = int(sampleDataFile)  # Convert it into an integer
 
     try:
-        with open("data/sampleData.txt", "r") as f: # Open the text file containing the sample data
+        with open("data/sampleData.txt", "r") as f:  # Open the text file containing the sample data
             for i, line in enumerate(f, 1):
-                if i == sampleDataFileNumber: # If i equals the number from sampleDataFileNumber, return the line
+                if i == sampleDataFileNumber:  # If i equals the number from sampleDataFileNumber, return the line
                     response = line
-                    data = generateKey(response)
-                    return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
+                    encrypted_data_b64, key_b64 = newGenerateKey(response)
+
+                    return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
     except ValueError:
         response = "Something went wrong with the API"
-        data = generateKey(response)
-        return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
+        encrypted_data_b64, key_b64 = newGenerateKey(response)
 
-    response = "Searched the text database and nothing was found" # If nothing was found then return this variable
-    data = generateKey(response)
-    return jsonify({"Token" : str(data[0]), "Key" : str(data[1])})
+        return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
+
+    response = "Searched the text database and nothing was found"  # If nothing was found then return this variable
+    encrypted_data_b64, key_b64 = newGenerateKey(response)
+
+    return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
 
 
 # Re-route all of these when deploying to linux
