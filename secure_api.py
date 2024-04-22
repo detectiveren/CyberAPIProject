@@ -6,6 +6,7 @@ from flask_cors import CORS, cross_origin
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 import random, base64
+import sqlite3
 
 # Deployable on Windows, Mac and Linux
 
@@ -63,6 +64,12 @@ def emailPage():
 @cross_origin()
 def sampleDataPage():
     return render_template('/html/secure/sampleSensitiveData.html')
+
+
+@app.route('/secure/sqlData')
+@cross_origin()
+def sampleSQLData():
+    return render_template('html/secure/sqldata.html')
 
 
 # This app routes below are the API endpoints that the command line and web pages will interact with
@@ -142,6 +149,32 @@ def sampleData():
     response = "Searched the text database and nothing was found"  # If nothing was found then return this variable
     encrypted_data_b64, key_b64 = newGenerateKey(response)
 
+    return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
+
+
+@app.route('/secure-api/grabSQLdata', methods=['GET'])
+@cross_origin()
+def getSQLiteData():
+    # Error message if it the SQL database fails for some reason
+    response = ""
+    # Connect to the userdata db
+    conn = sqlite3.connect('userdata.db')
+
+    # Create cursor object
+    cur = conn.cursor()
+
+    # Query the database
+    cur.execute('SELECT * FROM userdata')
+    rows = cur.fetchall()
+
+    # Get column names
+    column_names = [description[0] for description in cur.description]
+
+    for row in rows:
+        for i in range(len(row)):
+            response += f"{column_names[i]}: {row[i]} \n"  # Print out the text in the row alongside the column name
+
+    encrypted_data_b64, key_b64 = newGenerateKey(response)
     return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
 
 
