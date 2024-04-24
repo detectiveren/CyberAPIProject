@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1.0">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+        <Title>User Posts API - Secure</Title>
+    </head>
+
+    <body>
+        <h1>Press the button to retrieve user posts - Secure</h1>
+        <p>Ensure that unsecure_api.py is running</p>
+        <p>NOTE TO SELF: Make sure to organise the html files into secure/insecure for the APIs</p>
+        <div class="center">
+            <button type="button" onclick="sqlData()">Random User Posts</button>
+            <p id="response"></p>
+            <p>The response will be sent by the API</p>
+            <div id="resultContainer"></div>
+            <button id="decryptButton">Decrypt Message</button>
+            <p>This will be decrypted locally</p>
+            <p id="decryptedMessage"></p>
+        </div>
+        <!-- This is how flask finds the JS scripts for the html files -->
+        <script src="{{url_for('static', filename='js/sqlUserPosts_secure.js')}}"></script>
+        <script src="{{url_for('static', filename='js/decryptData.js')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    </body>
+</html>

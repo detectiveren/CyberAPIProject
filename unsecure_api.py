@@ -54,6 +54,12 @@ def sampleSQLData():
     return render_template('html/insecure/sqldata.html')
 
 
+@app.route('/insecure/sqlUserPosts')
+@cross_origin()
+def sampleUserPosts():
+    return render_template('html/insecure/retrieveuserposts.html')
+
+
 # This app routes below are the API endpoints that the command line and web pages will interact with
 
 @app.route('/unsecure-api/say-hi', methods=['GET'])  # Set up a URL route where it will take a function
@@ -160,6 +166,38 @@ def getSQLiteData():
         for i in range(len(row)):
             response += f"{column_names[i]}: {row[i]}<br>"
         response += "<br>"
+    return response
+
+
+@app.route('/unsecure-api/grabUserPosts', methods=['GET'])
+@cross_origin()
+def grabUserPosts():
+    userID = request.args.get('userID')  # Grab the user id
+
+    randomUserID = int(userID)
+
+    response = ""
+
+    # Connect to the database
+    conn = sqlite3.connect('userdata.db')
+
+    # Create cursor object
+
+    getUserData = conn.cursor()
+
+    # Query the database
+
+    getUserData.execute(
+        f'SELECT userdata.username, posts.post FROM posts INNER JOIN userdata ON posts.userdata_id = userdata.id WHERE posts.userdata_id={randomUserID}')
+    rows = getUserData.fetchall()
+
+    column_names = [description[0] for description in getUserData.description]
+
+    for row in rows:
+        for i in range(len(row)):
+            response += f"{column_names[i]}: {row[i]}<br>"  # Print out the text in the row alongside the column name
+        response += "<br>"
+
     return response
 
 

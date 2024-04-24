@@ -72,6 +72,12 @@ def sampleSQLData():
     return render_template('html/secure/sqldata.html')
 
 
+@app.route('/secure/sqlUserPosts')
+@cross_origin()
+def sampleUserPosts():
+    return render_template('html/secure/retrieveuserposts.html')
+
+
 # This app routes below are the API endpoints that the command line and web pages will interact with
 
 @app.route('/secure-api/say-hi', methods=['GET'])  # Set up a URL route where it will take a function
@@ -152,10 +158,13 @@ def sampleData():
     return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
 
 
-@app.route('/secure-api/grabSQLdata', methods=['GET'])
+@app.route('/secure-api/grabSQLdata', methods=['GET'])  # User SQL database
 @cross_origin()
 def getSQLiteData():
-    # Error message if it the SQL database fails for some reason
+    sqlDataNumber = request.args.get('sqlNumber')  # Grab the number input
+
+    randomNumber = int(sqlDataNumber)
+    # Error message if it is the SQL database fails for some reason
     response = ""
     # Connect to the userdata db
     conn = sqlite3.connect('userdata.db')
@@ -164,7 +173,7 @@ def getSQLiteData():
     cur = conn.cursor()
 
     # Query the database
-    cur.execute('SELECT * FROM userdata')
+    cur.execute(f'SELECT * FROM userdata WHERE id={randomNumber}')
     rows = cur.fetchall()
 
     # Get column names
@@ -172,7 +181,38 @@ def getSQLiteData():
 
     for row in rows:
         for i in range(len(row)):
-            response += f"{column_names[i]}: {row[i]} \n"  # Print out the text in the row alongside the column name
+            response += f"{column_names[i]}: {row[i]} \n | "  # Print out the text in the row alongside the column name
+
+    encrypted_data_b64, key_b64 = newGenerateKey(response)
+    return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
+
+
+@app.route('/secure-api/grabUserPosts', methods=['GET'])
+@cross_origin()
+def grabUserPosts():
+    userID = request.args.get('userID')  # Grab the user id
+
+    randomUserID = int(userID)
+
+    response = ""
+
+    # Connect to the database
+    conn = sqlite3.connect('userdata.db')
+
+    # Create cursor object
+
+    getUserData = conn.cursor()
+
+    # Query the database
+
+    getUserData.execute(f'SELECT userdata.username, posts.post FROM posts INNER JOIN userdata ON posts.userdata_id = userdata.id WHERE posts.userdata_id={randomUserID}')
+    rows = getUserData.fetchall()
+
+    column_names = [description[0] for description in getUserData.description]
+
+    for row in rows:
+        for i in range(len(row)):
+            response += f"{column_names[i]}: {row[i]} \n | "  # Print out the text in the row alongside the column name
 
     encrypted_data_b64, key_b64 = newGenerateKey(response)
     return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
