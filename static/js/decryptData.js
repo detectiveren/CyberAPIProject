@@ -42,5 +42,5 @@ document.getElementById("decryptButton").addEventListener("click", function() {
     const decryptedMessage = decryptAndSanitizeAES(encryptedData, key);
 
     // Display the decrypted message
-    document.getElementById("decryptedMessage").innerText = decryptedMessage;
+    document.getElementById("decryptedMessage").innerHTML = decryptedMessage;
 });

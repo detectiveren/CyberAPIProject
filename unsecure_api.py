@@ -96,28 +96,44 @@ def agePrediction():
 def emailLogIn():
     email = request.args.get('email')
 
-    if email == "":
-        text = "You didn't input an email, invalid login"
-        return text
+    response = ""
 
-    elif email == "eddy@gmail.com":
-        return redirect('/unsecure-api/email_account?emailAccount=' + email, code=302)
+    # Connect to database
 
-    else:
-        text = "The email " + email + " is not found on the database"
-        return text
+    conn = sqlite3.connect('userdata.db')
 
+    # Create cursor
 
-@app.route('/unsecure-api/email_account', methods=['GET'])
-@cross_origin()
-def loggedIn():
-    email_account = request.args.get('emailAccount')
+    getEmailData = conn.cursor()
 
-    if email_account == "eddy@gmail.com":  # If the login is valid
-        text = "You have logged in successfully to " + email_account
-        return text
-    else:
-        return redirect('/unsecure-api/email?email=' + email_account, code=302)  # If the login is invalid
+    # Query the database
+
+    try:
+        # Retrieve the email and username where the email matches what the user entered
+        getEmailData.execute(f'SELECT email, username, id FROM userdata WHERE email=\'{email}\'')
+        rows = getEmailData.fetchall()
+
+        if rows:
+            for row in rows:
+                username = str(row[1])
+                id = str(row[2])
+
+                response = "Successfully logged in as: " + username + "<br>Here are your posts<br><br>"
+
+                getEmailData.execute(
+                    f'SELECT posts.post FROM posts INNER JOIN userdata ON posts.userdata_id = '
+                    f'userdata.id WHERE posts.userdata_id={id}')
+                rows = getEmailData.fetchall()
+                for row in rows:
+                    for i in range(len(row)):
+                        response += f"Post: {row[i]}<br>"  # Print out the text in the row alongside the column name
+                    response += "<br>"
+        else:
+            response = "No account with that email was found on the database"
+    except:
+        response = "Error with database"
+
+    return response
 
 
 @app.route('/unsecure-api/sampleData', methods=['GET'])

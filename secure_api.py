@@ -18,6 +18,8 @@ app = Flask(__name__)
 # Fernet will no longer be used as JavaScript does not support it properly, therefore the change to AES
 # encryption and decryption was necessary
 
+# This API has SQL Injection Prevention which means it is built to prevent SQL Injection Attacks
+
 def newGenerateKey(data):
     data = bytes(str(data), 'utf-8')
     key = get_random_bytes(16)  # Generate a 16-byte (128-bit) AES key
@@ -117,14 +119,54 @@ def agePrediction():
 @cross_origin()
 def emailLogIn():
     email = request.args.get('email')
-    if email is None:
-        response = "You didn't input an email, invalid login"
+    sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
+                                "\'; DROP TABLE posts; --", ";", "--"]
+    # List of strings that are used in SQL Injection Attacks
 
-    elif email == "eddy@gmail.com":
-        response = "You have logged in successfully to " + email
+    if any(sql_injection_type in email for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + email)
+        email = "invalid"
+        print("Value for email was reset to: " + email)
 
-    else:
-        response = "The email " + email + " is not found on the database"
+    response = ""
+
+    # Connect to database
+
+    conn = sqlite3.connect('userdata.db')
+
+    # Create cursor
+
+    getEmailData = conn.cursor()
+
+    # Query the database
+
+    try:
+        # Retrieve the email and username where the email matches what the user entered
+        getEmailData.execute(f'SELECT email, username, id FROM userdata WHERE email=\'{email}\'')
+        rows = getEmailData.fetchall()
+
+        if rows:
+            for row in rows:
+                username = str(row[1])
+                id = str(row[2])
+
+                response = "Successfully logged in as: " + username + "<br>Here are your posts<br><br>"
+
+                getEmailData.execute(
+                    f'SELECT posts.post FROM posts INNER JOIN userdata ON posts.userdata_id = '
+                    f'userdata.id WHERE posts.userdata_id={id}')
+                rows = getEmailData.fetchall()
+                for row in rows:
+                    for i in range(len(row)):
+                        response += f"Post: {row[i]}<br>"  # Print out the text in the row alongside the column name
+                    response += "<br>"
+        else:
+            response = "No account with that email was found on the database"
+    except:
+        response = "Error with database"
 
     encrypted_data_b64, key_b64 = newGenerateKey(response)
 
@@ -162,6 +204,17 @@ def sampleData():
 @cross_origin()
 def getSQLiteData():
     sqlDataNumber = request.args.get('sqlNumber')  # Grab the number input
+    sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
+                                "\'; DROP TABLE posts; --", ";", "--"]
+    # List of strings that are used in SQL Injection Attacks
+
+    if any(sql_injection_type in sqlDataNumber for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + sqlDataNumber)
+        sqlDataNumber = "0"
+        print("Value for sqlDataNumber was reset to: " + sqlDataNumber)
 
     randomNumber = int(sqlDataNumber)
     # Error message if it is the SQL database fails for some reason
@@ -181,7 +234,7 @@ def getSQLiteData():
 
     for row in rows:
         for i in range(len(row)):
-            response += f"{column_names[i]}: {row[i]} \n | "  # Print out the text in the row alongside the column name
+            response += f"{column_names[i]}: {row[i]} \n <br>"  # Print out the text in the row alongside the column name
 
     encrypted_data_b64, key_b64 = newGenerateKey(response)
     return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
@@ -191,6 +244,17 @@ def getSQLiteData():
 @cross_origin()
 def grabUserPosts():
     userID = request.args.get('userID')  # Grab the user id
+    sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
+                                "\'; DROP TABLE posts; --", ";", "--"]
+    # List of strings that are used in SQL Injection Attacks
+
+    if any(sql_injection_type in userID for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + userID)
+        userID = "0"
+        print("Value for userID was reset to: " + userID)
 
     randomUserID = int(userID)
 
@@ -212,7 +276,7 @@ def grabUserPosts():
 
     for row in rows:
         for i in range(len(row)):
-            response += f"{column_names[i]}: {row[i]} \n | "  # Print out the text in the row alongside the column name
+            response += f"{column_names[i]}: {row[i]} \n <br>"  # Print out the text in the row alongside the column name
 
     encrypted_data_b64, key_b64 = newGenerateKey(response)
     return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
@@ -221,4 +285,4 @@ def grabUserPosts():
 # Re-route all of these when deploying to linux
 # app.run(debug=True, host='10.0.2.5', port=8000) for example
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.run(debug=True, port=9000)
