@@ -70,6 +70,16 @@ def editHTMLFile(file_path, ip_address):
                 file.write(content)
 
 
+def setDeploymentSystem(os_choice):
+    # Set the deployment system based on the OS choice
+    if os_choice == 'windows':
+        deployment_operating_system = "Windows"
+    else:
+        deployment_operating_system = "Linux"
+
+    return deployment_operating_system
+
+
 def configureAPI():
     # Ask the user what operating system they are on
     os_choice = input("Enter your operating system choice (Windows/Linux): ").lower()
@@ -87,3 +97,5 @@ def configureAPI():
     directory = "."
 
     editFiles(directory, ip_address)
+
+    return os_choice

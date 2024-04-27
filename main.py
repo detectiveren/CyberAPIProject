@@ -13,20 +13,19 @@ projectCreator = "Eduardo Manuel Costa Moreira"
 projectLatestUpdate = "27/04/2024"
 milestoneNumber = "Milestone 14"
 
-deployment_operating_system = "Linux"
-
 
 def welcomeMessage():  # This is the welcome message
     print("Welcome to my Final Year Project")
     print("Project Name: ", projectName, "\nProject Description: ", projectDesc)
     print("Project Creator: ", projectCreator)
     print("Project Latest Update: ", projectLatestUpdate)
-    print(milestoneNumber)
+    print("Final Artefact Version\n" + milestoneNumber)
 
 
-def menu(os):
+def menu():
     user = ""
-    api_config.configureAPI()
+    operatingSystem = api_config.configureAPI()
+    os = api_config.setDeploymentSystem(operatingSystem)
     welcomeMessage()  # Display the welcome message
     print("1. Unsecure API")
     print("2. Secure API")
@@ -52,4 +51,4 @@ def menu(os):
                 subprocess.Popen(['python3', 'secure_api.py'])
 
 
-menu(deployment_operating_system)
+menu()
