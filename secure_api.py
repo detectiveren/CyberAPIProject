@@ -5,6 +5,7 @@ from flask import Flask, jsonify, request, send_file, render_template
 from flask_cors import CORS, cross_origin
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
+from Crypto.Util.Padding import unpad
 import random, base64
 import sqlite3
 
@@ -85,7 +86,15 @@ def sampleUserPosts():
 @app.route('/secure-api/say-hi', methods=['GET'])  # Set up a URL route where it will take a function
 @cross_origin()
 def helloTest():
-    name = request.args.get('name')  # get the name of the user from "?name="
+    encrypted_name = request.args.get('name')  # get the name of the user from "?name="
+    iv = request.args.get('iv')
+
+    key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
+    # Decrypt the name using AES
+    cipher = AES.new(key, AES.MODE_CBC, base64.b64decode(iv))
+    decrypted_name = unpad(cipher.decrypt(base64.b64decode(encrypted_name)), AES.block_size).decode('utf-8')
+
+    name = str(decrypted_name)
 
     if name is None:
         response = "Hello!"  # Put the string "Hello" in response
@@ -101,7 +110,15 @@ def helloTest():
 @app.route('/secure-api/age-prediction', methods=['GET'])
 @cross_origin()
 def agePrediction():
-    name = request.args.get('name')
+    encrypted_name = request.args.get('name')
+    iv = request.args.get('iv')
+
+    key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
+    # Decrypt the name using AES
+    cipher = AES.new(key, AES.MODE_CBC, base64.b64decode(iv))
+    decrypted_name = unpad(cipher.decrypt(base64.b64decode(encrypted_name)), AES.block_size).decode('utf-8')
+
+    name = str(decrypted_name)
 
     if name is None:
         response = "You didn't insert a name!"
@@ -118,7 +135,15 @@ def agePrediction():
 @app.route('/secure-api/email', methods=['GET'])
 @cross_origin()
 def emailLogIn():
-    email = request.args.get('email')
+    encrypted_email = request.args.get('email')
+    iv = request.args.get('iv')
+
+    key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
+    # Decrypt the email using AES
+    cipher = AES.new(key, AES.MODE_CBC, base64.b64decode(iv))
+    decrypted_email = unpad(cipher.decrypt(base64.b64decode(encrypted_email)), AES.block_size).decode('utf-8')
+
+    email = decrypted_email
     sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
                                 "\'; DROP TABLE posts; --", ";", "--"]
     # List of strings that are used in SQL Injection Attacks
