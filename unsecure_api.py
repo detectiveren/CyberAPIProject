@@ -100,7 +100,7 @@ def emailLogIn():
 
     # Connect to database
 
-    conn = sqlite3.connect('userdata.db')
+    conn = sqlite3.connect('userdata_insecure.db')
 
     # Create cursor
 
@@ -166,7 +166,7 @@ def getSQLiteData():
     # Error message if it the SQL database fails for some reason
     response = ""
     # Connect to the userdata db
-    conn = sqlite3.connect('userdata.db')
+    conn = sqlite3.connect('userdata_insecure.db')
 
     # Create cursor object
     cur = conn.cursor()
@@ -195,7 +195,7 @@ def grabUserPosts():
     response = ""
 
     # Connect to the database
-    conn = sqlite3.connect('userdata.db')
+    conn = sqlite3.connect('userdata_insecure.db')
 
     # Create cursor object
 
