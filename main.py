@@ -10,6 +10,7 @@ projectDesc = ("A Cyber-security API Project that will show the difference betwe
                "an insecure API and secure API (using encryption) to show how API Security is important \n"
                "in today's world")
 projectCreator = "Eduardo Manuel Costa Moreira"
+projectStudentID = "MOR21500097"
 projectLatestUpdate = "27/04/2024"
 milestoneNumber = "Milestone 14"
 
@@ -17,7 +18,8 @@ milestoneNumber = "Milestone 14"
 def welcomeMessage():  # This is the welcome message
     print("Welcome to my Final Year Project")
     print("Project Name: ", projectName, "\nProject Description: ", projectDesc)
-    print("Project Creator: ", projectCreator)
+    print("Student Name: ", projectCreator)
+    print("Student ID: ", projectStudentID)
     print("Project Latest Update: ", projectLatestUpdate)
     print("Final Artefact Version\n" + milestoneNumber)
 
