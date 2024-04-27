@@ -24,6 +24,8 @@ unsecure_api_local_email = "http://127.0.0.1:8000/unsecure-api/email?email="
 secure_api_test_sample_data = "http://127.0.0.1:8000/secure-api/sampleData?sampleDataNumber="
 unsecure_api_test_sample_data = "http://127.0.0.1:8000/unsecure-api/sampleData?sampleDataNumber="
 
+deployment_operating_system = "Linux"
+
 
 def welcomeMessage():  # This is the welcome message
     print("Welcome to my Final Year Project")
@@ -33,24 +35,31 @@ def welcomeMessage():  # This is the welcome message
     print(milestoneNumber)
 
 
-def menu():
+def menu(os):
     user = ""
-    welcomeMessage() # Display the welcome message
+    welcomeMessage()  # Display the welcome message
     print("1. Unsecure API")
     print("2. Secure API")
     print("3. Start both")
     print("4. Exit")
     while user != 4:
         user = int(input("Enter an API application to use (Type the number): "))
+        if os == "Windows":
+            if user == 1:
+                subprocess.Popen(['python', 'insecure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
+            if user == 2:
+                subprocess.Popen(['python', 'secure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
+            if user == 3:
+                subprocess.Popen(['python', 'insecure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
+                subprocess.Popen(['python', 'secure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
+        if os == "Linux":
+            if user == 1:
+                subprocess.Popen(['python', 'insecure_api.py'])
+            if user == 2:
+                subprocess.Popen(['python', 'secure_api.py'])
+            if user == 3:
+                subprocess.Popen(['python', 'insecure_api.py'])
+                subprocess.Popen(['python', 'secure_api.py'])
 
-        if user == 1:
-            subprocess.Popen(['python', 'insecure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
-        if user == 2:
-            subprocess.Popen(['python', 'secure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
-        if user == 3:
-            subprocess.Popen(['python', 'insecure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
-            subprocess.Popen(['python', 'secure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
 
-
-
-menu()
+menu(deployment_operating_system)
