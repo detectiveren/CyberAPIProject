@@ -13,7 +13,7 @@ async function sendName() {
         var encryptedName = CryptoJS.AES.encrypt(name, key, { iv: iv }).toString();
         // Make an asynchronous request to the API endpoint
         // Re-route this to 'http://10.0.2.5:9000/secure-api/age-prediction?name=' when deploying to linux
-        const response = await fetch('http://127.0.0.1:9000/secure-api/age-prediction?name=' + encodeURIComponent(encryptedName) + '&iv=' + encodeURIComponent(iv.toString(CryptoJS.enc.Base64)), {
+        const response = await fetch('http://10.0.2.5:9000/secure-api/age-prediction?name=' + encodeURIComponent(encryptedName) + '&iv=' + encodeURIComponent(iv.toString(CryptoJS.enc.Base64)), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
