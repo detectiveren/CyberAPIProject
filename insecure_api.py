@@ -1,6 +1,6 @@
 # Name: Eduardo Manuel Costa Moreira
 # Student ID: MOR21500097
-# Date: 17/01/2024
+# Date: 27/04/2024
 from flask import Flask, jsonify, request, send_file, redirect, render_template
 from flask_cors import CORS, cross_origin
 import random

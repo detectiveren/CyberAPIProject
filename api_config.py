@@ -83,7 +83,7 @@ def configureAPI():
     else:
         ip_address = '10.0.2.5'
 
-    # Ask the user for the directory to scan
+    # The directory to scan will be the root of where the script is running
     directory = "."
 
     editFiles(directory, ip_address)
