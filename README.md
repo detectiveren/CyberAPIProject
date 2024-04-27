@@ -128,3 +128,16 @@ Files that have been deprecated as they are no longer needed thanks to the proje
 - communicate_with_unsecure_api.py is no longer needed as you can interact with the API on the web
 - decryptData.py is no longer needed as decryption is handled by both the JS files and the API scripts themselves
 
+Git cloning the private GitHub repository containing the project code into Linux can be done using GitHub tokens, this token is set to never expire (which is usually not recommended but for the sake of making this project easier for deployment it won't expire) 
+
+
+The command to git clone the private repo is as follows: 
+
+sudo git clone ```https://ghp_ttzfYfnv1CQqdM7ok2GhwNQ9u15UAB1la5yA@github.com/detectiveren/CyberAPIProject.git```
+
+
+Once git cloned, before running everything, make sure the response variable in all the JS files point towards the host of the Ubuntu Server which is 10.0.2.5 and ensure that both unsecure_api.py and secure_api.py are pointing towards the host too
+
+
+Same applies for main.py if you want to run the APIs through there
+
