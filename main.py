@@ -1,9 +1,9 @@
 # Name: Eduardo Manuel Costa Moreira
 # Student ID: MOR21500097
-# Date: 22/02/2024
+# Date: 27/04/2024
 
 # Here's where imports are handled
-import subprocess
+import subprocess, api_config
 
 projectName = "Cyber API Security Project"
 projectDesc = ("A Cyber-security API Project that will show the difference between \n"
@@ -26,6 +26,7 @@ def welcomeMessage():  # This is the welcome message
 
 def menu(os):
     user = ""
+    api_config.configureAPI()
     welcomeMessage()  # Display the welcome message
     print("1. Unsecure API")
     print("2. Secure API")

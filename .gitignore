@@ -10,3 +10,4 @@ __pycache__/api_codes.cpython-312.pyc
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/CyberAPIProject.iml
 .DS_Store
+__pycache__/api_config.cpython-310.pyc
