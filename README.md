@@ -7,27 +7,52 @@ main.py is where you launch into either insecure API or secure API, you will the
 
 ## API URLs/Endpoints
 
-Insecure API URLs with functions so far:
+Insecure API URLs that can be interacted with so far:
 
-http://127.0.0.1:8000/unsecure-api/age-prediction?name=(insert name here) predicts age based on name
-http://127.0.0.1:8000/unsecure-api/say-hi?name=(insert name here) says hi to the user
+# Windows
+http://127.0.0.1:8000/insecure/sayhello ```Says Hello to the User```
+http://127.0.0.1:8000/insecure/ageprediction ```Predicts the user's age based on their name```
+http://127.0.0.1:8000/insecure/email ```Users logs in through the API using their email (uses API's database)```
+http://127.0.0.1:8000/insecure/sampleSensitiveData ```Sample sensitive data from a textfile on the API's directory```
+http://127.0.0.1:8000/insecure/sqlData ```Sample user data on the API's database```
+http://127.0.0.1:8000/insecure/sqlUserPosts ```Sample user posts on the API's database```
+# Linux
+http://10.0.2.5:8000/insecure/sayhello 
+http://10.0.2.5:8000/insecure/ageprediction 
+http://10.0.2.5:8000/insecure/email 
+http://10.0.2.5:8000/insecure/sampleSensitiveData 
+http://10.0.2.5:8000/insecure/sqlData 
+http://10.0.2.5:8000/insecure/sqlUserPosts 
 
-Secure API URLs with functions so far: 
 
-http://127.0.0.1:8000/secure-api/say-hi?name=(insert name here)
-http://127.0.0.1:8000/secure-api/age-prediction?name=(insert name here)
+Secure API URLs that can be interacted with so far: 
+
+# Windows
+http://127.0.0.1:9000/secure/sayhello ```Says Hello to the User```
+http://127.0.0.1:9000/secure/ageprediction ```Predicts the user's age based on their name```
+http://127.0.0.1:9000/secure/email ```Users logs in through the API using their email (uses API's database)```
+http://127.0.0.1:9000/secure/sampleSensitiveData ```Sample sensitive data from a textfile on the API's directory```
+http://127.0.0.1:9000/secure/sqlData ```Sample user data on the API's database```
+http://127.0.0.1:9000/secure/sqlUserPosts ```Sample user posts on the API's database```
+# Linux
+http://10.0.2.5:8000/secure/sayhello 
+http://10.0.2.5:8000/secure/ageprediction 
+http://10.0.2.5:8000/secure/email 
+http://10.0.2.5:8000/secure/sampleSensitiveData 
+http://10.0.2.5:8000/secure/sqlData 
+http://10.0.2.5:8000/secure/sqlUserPosts 
 
 ## Running the API
 
 IMPORTANT NOTE: When interacting with either the secure API or insecure API, ensure that the correct API is running in the background otherwise you'll recieve a 404 message or the page won't load
 
-Steps to running and testing insecure API:
+Steps for running and testing insecure API:
 
 1) run insecure_api.py or run it through main.py (select option 1)
 2) Go to the browser and enter 127.0.0.1:8000
 3) Interact with the Insecure API pages listed on the home page (the secure API pages won't work as they are for the secure API)
 
-Steps to running and testing secure API:
+Steps for running and testing secure API:
 
 1) run secure_api.py or run it through main.py (select option 2)
 2) Go to the browser and enter 127.0.0.1:9000
