@@ -1,6 +1,6 @@
-communicate_with_unsecure_api.py is the python script to communicate with the unsecure API and use its functions (cannot be ran independently, launch main.py)
+communicate_with_insecure_api.py is the python script to communicate with the unsecure API and use its functions (cannot be ran independently, launch main.py)
 
-unsecure_api.py is the API itself, this has to be ran independently (cannot be initiated from main.py)
+insecure_api.py is the API itself, this has to be ran independently (cannot be initiated from main.py)
 
 communicate_with_secure_api.py is the python script to communicate with the secure API and use its functions, it can decrypt any data recieved (cannot be ran independently, launch main.py)
 
@@ -22,7 +22,7 @@ IMPORTANT NOTE: When communicating with either the secure API or unsecure API, e
 
 Steps to running and testing unsecure API:
 
-1) run unsecure_api.py
+1) run insecure_api.py
 2) run main.py
 3) Type "1" when asked "Enter an API application to use (Type the number): "
 4) you can also run the API URLs above for the unsecure API on the web
@@ -41,7 +41,7 @@ https://anderfernandez.com/en/blog/how-to-create-api-python/
 
 ( FOR LINUX TESTING )
 
-Run either unsecure_api.py or secure_api.py in Ubuntu Server (ensure the host is 10.0.2.5)
+Run either insecure_api.py or secure_api.py in Ubuntu Server (ensure the host is 10.0.2.5)
 
 Go to Kali Linux, open up main.py (ensure all API URLs are routed to 10.0.2.5)
 
@@ -57,7 +57,7 @@ Ensure all the JS files have the response variable fetch URL changed to the host
 
 For example in ```sampleSensitiveData_secure.js```, change the following ```const response = await fetch('http://127.0.0.1:8000/secure-api/sampleData?sampleDataNumber=' + num, { method: 'get'});``` to ```const response = await fetch('http://10.0.2.5:8000/secure-api/sampleData?sampleDataNumber=' + num, { method: 'get'});```
 
-Also like the above, make sure both unsecure_api.py and secure_api.py have the correct host in the code depending on the platform, the host is 10.0.2.5 for Ubuntu Server
+Also like the above, make sure both insecure_api.py and secure_api.py have the correct host in the code depending on the platform, the host is 10.0.2.5 for Ubuntu Server
 
 Whether you are using Windows or Linux, to test the web versions of interactions between the client and API, go to http://127.0.0.1:8000/ if you are on Windows or http://10.0.2.5:8000/ if you are on Linux 
 

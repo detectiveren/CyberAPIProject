@@ -44,11 +44,11 @@ def menu():
         user = int(input("Enter an API application to use (Type the number): "))
 
         if user == 1:
-            subprocess.Popen(['python', 'unsecure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
+            subprocess.Popen(['python', 'insecure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
         if user == 2:
             subprocess.Popen(['python', 'secure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
         if user == 3:
-            subprocess.Popen(['python', 'unsecure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
+            subprocess.Popen(['python', 'insecure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
             subprocess.Popen(['python', 'secure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
 
 
