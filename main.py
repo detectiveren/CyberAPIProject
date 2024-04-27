@@ -54,12 +54,12 @@ def menu(os):
                 subprocess.Popen(['python', 'secure_api.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
         if os == "Linux":
             if user == 1:
-                subprocess.Popen(['python', 'insecure_api.py'])
+                subprocess.Popen(['python3', 'insecure_api.py'])
             if user == 2:
-                subprocess.Popen(['python', 'secure_api.py'])
+                subprocess.Popen(['python3', 'secure_api.py'])
             if user == 3:
-                subprocess.Popen(['python', 'insecure_api.py'])
-                subprocess.Popen(['python', 'secure_api.py'])
+                subprocess.Popen(['python3', 'insecure_api.py'])
+                subprocess.Popen(['python3', 'secure_api.py'])
 
 
 menu(deployment_operating_system)
