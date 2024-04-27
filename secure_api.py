@@ -42,42 +42,49 @@ def newGenerateKey(data):
 @app.route('/')
 @cross_origin()
 def homePage():
+    print("User is accessing home page")
     return render_template('index.html')
 
 
 @app.route('/secure/sayhello')
 @cross_origin()
 def sayHelloPage():
+    print("User is accessing Hello Page for Secure API")
     return render_template('/html/secure/sayhello.html')
 
 
 @app.route('/secure/ageprediction')
 @cross_origin()
 def agePredictionPage():
+    print("User is accessing Age Prediction Page for Secure API")
     return render_template('/html/secure/ageprediction.html')
 
 
 @app.route('/secure/email')
 @cross_origin()
 def emailPage():
+    print("User is accessing Email Login Page for Secure API")
     return render_template('/html/secure/emailLogIn.html')
 
 
 @app.route('/secure/sampleSensitiveData')
 @cross_origin()
 def sampleDataPage():
+    print("User is accessing Sample Sensitive Data Page for Secure API")
     return render_template('/html/secure/sampleSensitiveData.html')
 
 
 @app.route('/secure/sqlData')
 @cross_origin()
 def sampleSQLData():
+    print("User is accessing SQLData Page for Secure API")
     return render_template('html/secure/sqldata.html')
 
 
 @app.route('/secure/sqlUserPosts')
 @cross_origin()
 def sampleUserPosts():
+    print("User is accessing SQL User Posts Page for Secure API")
     return render_template('html/secure/retrieveuserposts.html')
 
 

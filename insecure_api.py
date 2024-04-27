@@ -21,42 +21,49 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/')
 @cross_origin()
 def homePage():
+    print("User is accessing home page")
     return render_template('index.html')
 
 
 @app.route('/insecure/sayhello')
 @cross_origin()
 def sayHelloPage():
+    print("User is accessing Hello Page for Insecure API")
     return render_template('/html/insecure/sayhello.html')
 
 
 @app.route('/insecure/ageprediction')
 @cross_origin()
 def agePredictionPage():
+    print("User is accessing Age Prediction Page for Insecure API")
     return render_template('/html/insecure/ageprediction.html')
 
 
 @app.route('/insecure/email')
 @cross_origin()
 def emailPage():
+    print("User is accessing Email Login Page for Insecure API")
     return render_template('/html/insecure/emailLogIn.html')
 
 
 @app.route('/insecure/sampleSensitiveData')
 @cross_origin()
 def sampleSensitiveDataPage():
+    print("User is accessing Sample Sensitive Data Page for Insecure API")
     return render_template('html/insecure/sampleSensitiveData.html')
 
 
 @app.route('/insecure/sqlData')
 @cross_origin()
 def sampleSQLData():
+    print("User is accessing SQLData Page for Insecure API")
     return render_template('html/insecure/sqldata.html')
 
 
 @app.route('/insecure/sqlUserPosts')
 @cross_origin()
 def sampleUserPosts():
+    print("User is accessing SQL User Posts Page for Insecure API")
     return render_template('html/insecure/retrieveuserposts.html')
 
 
