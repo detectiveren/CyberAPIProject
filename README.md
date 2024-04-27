@@ -60,7 +60,7 @@ Secure API URLs that can be interacted with so far:
 
 - http://10.0.2.5:8000/secure/sampleSensitiveData 
 
- -http://10.0.2.5:8000/secure/sqlData 
+- http://10.0.2.5:8000/secure/sqlData 
 
 - http://10.0.2.5:8000/secure/sqlUserPosts 
 
@@ -81,6 +81,18 @@ Steps for running and testing secure API:
 3) Interact with the Secure API pages listed on the home page (the insecure API pages won't work as they are for the insecure API)
 
 ## For Linux Testing
+
+### VM Account Info for Ubuntu Server
+
+- username: eddy
+- password: 123
+
+### VM Account Info for Kali Linux
+
+- username: kali
+- password: kali
+
+### Setting up the API on Linux
 
 All learning materials used: 
 https://www.zyte.com/blog/json-parsing-with-python/
