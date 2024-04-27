@@ -1,3 +1,9 @@
+# Cyber API Security Project
+
+- Name: Eduardo Manuel Costa Moreira
+- Student ID: MOR21500097
+- Date: 27/04/2024
+
 ## Details on the APIs
 insecure_api.py is the insecure API, this has to be ran independently (can be initiated from main.py)
 
