@@ -7,22 +7,11 @@ import subprocess
 
 projectName = "Cyber API Security Project"
 projectDesc = ("A Cyber-security API Project that will show the difference between \n"
-               "an unsecure API and secure API (using encryption) to show how API Security is important \n"
+               "an insecure API and secure API (using encryption) to show how API Security is important \n"
                "in today's world")
 projectCreator = "Eduardo Manuel Costa Moreira"
 projectLatestUpdate = "27/04/2024"
 milestoneNumber = "Milestone 14"
-
-# API URLs
-# REMINDER: Re-route all of these when deploying to linux
-secure_api_local_say_hi = "http://127.0.0.1:8000/secure-api/say-hi?name="
-unsecure_api_local_say_hi = "http://127.0.0.1:8000/unsecure-api/say-hi?name="
-secure_api_local_predict_age = "http://127.0.0.1:8000/secure-api/age-prediction?name="
-unsecure_api_local_predict_age = "http://127.0.0.1:8000/unsecure-api/age-prediction?name="
-secure_api_local_email = "http://127.0.0.1:8000/secure-api/email?email="
-unsecure_api_local_email = "http://127.0.0.1:8000/unsecure-api/email?email="
-secure_api_test_sample_data = "http://127.0.0.1:8000/secure-api/sampleData?sampleDataNumber="
-unsecure_api_test_sample_data = "http://127.0.0.1:8000/unsecure-api/sampleData?sampleDataNumber="
 
 deployment_operating_system = "Linux"
 
