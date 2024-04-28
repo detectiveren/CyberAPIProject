@@ -28,6 +28,10 @@ Insecure API URLs that can be interacted with so far:
 
 - http://127.0.0.1:8000/insecure/sqlUserPosts ```Sample user posts on the API's database```
 
+- http://127.0.0.1:8000/insecure/accountAccess ```Log into an account using a valid email and password```
+
+- http://127.0.0.1:8000/insecure/eraseData ```Erase Account Data```
+
 ### Linux
 - http://10.0.2.5:8000/insecure/sayhello 
 
@@ -40,6 +44,10 @@ Insecure API URLs that can be interacted with so far:
 - http://10.0.2.5:8000/insecure/sqlData 
 
 - http://10.0.2.5:8000/insecure/sqlUserPosts 
+
+- http://10.0.2.5:8000/insecure/accountAccess
+
+- http://10.0.2.5:8000/insecure/eraseData
 
 
 Secure API URLs that can be interacted with so far: 
@@ -57,6 +65,10 @@ Secure API URLs that can be interacted with so far:
 
 - http://127.0.0.1:9000/secure/sqlUserPosts ```Sample user posts on the API's database```
 
+- http://127.0.0.1:9000/secure/accountAccess ```Log into an account using a valid email and password```
+
+- http://127.0.0.1:9000/secure/eraseData ```Erase Account Data```
+
 ### Linux
 - http://10.0.2.5:8000/secure/sayhello 
 
@@ -69,6 +81,10 @@ Secure API URLs that can be interacted with so far:
 - http://10.0.2.5:8000/secure/sqlData 
 
 - http://10.0.2.5:8000/secure/sqlUserPosts 
+
+- http://10.0.2.5:9000/secure/accountAccess
+
+- http://10.0.2.5:9000/secure/eraseData
 
 ## Running the API
 
