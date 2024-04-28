@@ -67,6 +67,20 @@ def sampleUserPosts():
     return render_template('html/insecure/retrieveuserposts.html')
 
 
+@app.route('/insecure/accountAccess')
+@cross_origin()
+def accountAccess():
+    print("User is accessing Account Access for Insecure API")
+    return render_template('html/insecure/account_access.html')
+
+
+@app.route('/insecure/eraseData')
+@cross_origin()
+def eraseAccountData():
+    print("User is accessing Erase Data for Insecure API")
+    return render_template('html/insecure/erase_account_data.html')
+
+
 # This app routes below are the API endpoints that the command line and web pages will interact with
 
 @app.route('/unsecure-api/say-hi', methods=['GET'])  # Set up a URL route where it will take a function
@@ -220,6 +234,96 @@ def grabUserPosts():
         for i in range(len(row)):
             response += f"{column_names[i]}: {row[i]}<br>"  # Print out the text in the row alongside the column name
         response += "<br>"
+
+    return response
+
+
+@app.route('/unsecure-api/accountAccessPortal', methods=['GET'])
+@cross_origin()
+def accountAccessPortal():
+    email = request.args.get('e')
+    password = request.args.get('p')
+
+    response = ""
+
+    # Connect to database
+
+    conn = sqlite3.connect('userdata_insecure.db')
+
+    # Create cursor
+
+    getAccountData = conn.cursor()
+
+    # Query the database
+
+    try:
+        # Retrieve the email and username where the email matches what the user entered
+        getAccountData.execute(
+            f'SELECT email, username, id FROM userdata WHERE email=\'{email}\' AND password =\'{password}\'')
+        rows = getAccountData.fetchall()
+
+        if rows:
+            for row in rows:
+                username = str(row[1])
+                id = str(row[2])
+
+                response = "Successfully logged in as: " + username + "<br>Here are your posts<br><br>"
+
+                getAccountData.execute(
+                    f'SELECT posts.post FROM posts INNER JOIN userdata ON posts.userdata_id = '
+                    f'userdata.id WHERE posts.userdata_id={id}')
+                rows = getAccountData.fetchall()
+                for row in rows:
+                    for i in range(len(row)):
+                        response += f"Post: {row[i]}<br>"  # Print out the text in the row alongside the column name
+                    response += "<br>"
+        else:
+            response = "No account with that email was found on the database"
+    except:
+        response = "Error with database"
+
+    return response
+
+
+@app.route('/unsecure-api/eraseDataPortal', methods=['GET'])
+@cross_origin()
+def eraseDataPortal():
+    email = request.args.get('e')
+    password = request.args.get('p')
+
+    response = ""
+
+    # Connect to database
+
+    conn = sqlite3.connect('userdata_insecure.db')
+
+    # Create cursor
+
+    eraseAccountData = conn.cursor()
+
+    # Query the database
+
+    try:
+        # Retrieve the email and username where the email matches what the user entered
+        eraseAccountData.execute(
+            f'SELECT email, username, id FROM userdata WHERE email=\'{email}\' AND password =\'{password}\'')
+        rows = eraseAccountData.fetchall()
+
+        if rows:
+            for row in rows:
+                username = str(row[1])
+                id = str(row[2])
+                print(id)
+
+                eraseAccountData.execute(f'DELETE FROM userdata WHERE id=\'{id}\'')
+                response = "Successfully deleted account: " + username
+            conn.commit()
+
+        else:
+            response = "No account with that email and/or password was found on the database"
+    except sqlite3.Error as error:
+        print("SQLite3 Error ", error)
+        response = "Error with database"
 
     return response
 

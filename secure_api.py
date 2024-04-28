@@ -88,6 +88,20 @@ def sampleUserPosts():
     return render_template('html/secure/retrieveuserposts.html')
 
 
+@app.route('/secure/accountAccess')
+@cross_origin()
+def accountAccess():
+    print("User is accessing Account Access Page for Secure API")
+    return render_template('html/secure/account_access.html')
+
+
+@app.route('/secure/eraseData')
+@cross_origin()
+def eraseAccountData():
+    print("User is accessing Erase Data for Secure API")
+    return render_template('html/secure/erase_account_data.html')
+
+
 # This app routes below are the API endpoints that the command line and web pages will interact with
 
 @app.route('/secure-api/say-hi', methods=['GET'])  # Set up a URL route where it will take a function
@@ -301,7 +315,8 @@ def grabUserPosts():
 
     # Query the database
 
-    getUserData.execute(f'SELECT userdata.username, posts.post FROM posts INNER JOIN userdata ON posts.userdata_id = userdata.id WHERE posts.userdata_id={randomUserID}')
+    getUserData.execute(
+        f'SELECT userdata.username, posts.post FROM posts INNER JOIN userdata ON posts.userdata_id = userdata.id WHERE posts.userdata_id={randomUserID}')
     rows = getUserData.fetchall()
 
     column_names = [description[0] for description in getUserData.description]
@@ -311,6 +326,165 @@ def grabUserPosts():
             response += f"{column_names[i]}: {row[i]} \n <br>"  # Print out the text in the row alongside the column name
 
     encrypted_data_b64, key_b64 = newGenerateKey(response)
+    return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
+
+
+@app.route('/secure-api/accountAccessPortal', methods=['GET'])
+@cross_origin()
+def accessAccountPortal():
+    encrypted_email = base64.b64decode(request.args.get('e'))
+    encrypted_password = base64.b64decode(request.args.get('p'))
+    iv = base64.b64decode(request.args.get('iv'))
+
+    key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
+    # Decrypt the email and password using AES
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    decrypted_email = unpad(cipher.decrypt(encrypted_email), AES.block_size).decode('utf-8')
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    decrypted_password = unpad(cipher.decrypt(encrypted_password), AES.block_size).decode('utf-8')
+
+    email = decrypted_email
+    password = decrypted_password
+    sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
+                                "\'; DROP TABLE posts; --", ";", "--"]
+    # List of strings that are used in SQL Injection Attacks
+
+    if any(sql_injection_type in email for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + email)
+        email = "invalid"
+        print("Value for email was reset to: " + email)
+
+    if any(sql_injection_type in password for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + password)
+        password = "invalid"
+        print("Value for password was reset to: " + email)
+
+    response = ""
+
+    # Connect to database
+
+    conn = sqlite3.connect('userdata_secure.db')
+
+    # Create cursor
+
+    getAccountData = conn.cursor()
+
+    # Query the database
+
+    try:
+        # Retrieve the email and username where the email matches what the user entered
+        getAccountData.execute(
+            f'SELECT email, username, id FROM userdata WHERE email=\'{email}\' AND password =\'{password}\'')
+        rows = getAccountData.fetchall()
+
+        if rows:
+            for row in rows:
+                username = str(row[1])
+                id = str(row[2])
+
+                response = "Successfully logged in as: " + username + "<br>Here are your posts<br><br>"
+
+                getAccountData.execute(
+                    f'SELECT posts.post FROM posts INNER JOIN userdata ON posts.userdata_id = '
+                    f'userdata.id WHERE posts.userdata_id={id}')
+                rows = getAccountData.fetchall()
+                for row in rows:
+                    for i in range(len(row)):
+                        response += f"Post: {row[i]}<br>"  # Print out the text in the row alongside the column name
+                    response += "<br>"
+        else:
+            response = "No account with that email and/or password was found on the database"
+    except:
+        response = "Error with database"
+
+    encrypted_data_b64, key_b64 = newGenerateKey(response)
+
+    print(str(jsonify({"Token": encrypted_data_b64, "Key": key_b64})))
+
+    return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
+
+
+@app.route('/secure-api/eraseDataPortal', methods=['GET'])
+@cross_origin()
+def eraseDataPortal():
+    encrypted_email = base64.b64decode(request.args.get('e'))
+    encrypted_password = base64.b64decode(request.args.get('p'))
+    iv = base64.b64decode(request.args.get('iv'))
+
+    key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
+    # Decrypt the email and password using AES
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    decrypted_email = unpad(cipher.decrypt(encrypted_email), AES.block_size).decode('utf-8')
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    decrypted_password = unpad(cipher.decrypt(encrypted_password), AES.block_size).decode('utf-8')
+
+    email = decrypted_email
+    password = decrypted_password
+    sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
+                                "\'; DROP TABLE posts; --", ";", "--"]
+    # List of strings that are used in SQL Injection Attacks
+
+    if any(sql_injection_type in email for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + email)
+        email = "invalid"
+        print("Value for email was reset to: " + email)
+
+    if any(sql_injection_type in password for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + password)
+        password = "invalid"
+        print("Value for password was reset to: " + email)
+
+    response = ""
+
+    # Connect to database
+
+    conn = sqlite3.connect('userdata_secure.db')
+
+    # Create cursor
+
+    eraseAccountData = conn.cursor()
+
+    # Query the database
+
+    try:
+        # Retrieve the email and username where the email matches what the user entered
+        eraseAccountData.execute(
+            f'SELECT email, username, id FROM userdata WHERE email=\'{email}\' AND password =\'{password}\'')
+        rows = eraseAccountData.fetchall()
+
+        if rows:
+            for row in rows:
+                username = str(row[1])
+                id = str(row[2])
+                print(id)
+
+                eraseAccountData.execute(f'DELETE FROM userdata WHERE id=\'{id}\'')
+                print("Deleted user: ", username)
+                print("Deleted posts associated with user: ", username)
+                eraseAccountData.execute(f'DELETE FROM posts WHERE userdata_id=\'{id}\'')
+                response = "Successfully deleted account: " + username
+            conn.commit()
+        else:
+            response = "No account with that email and/or password was found on the database"
+    except:
+        response = "Error with database"
+
+    encrypted_data_b64, key_b64 = newGenerateKey(response)
+
+    print(str(jsonify({"Token": encrypted_data_b64, "Key": key_b64})))
+
     return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
 
 

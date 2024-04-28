@@ -1,0 +1,29 @@
+async function LogIn() {
+    var txtName = document.getElementById("txtName");
+    var txtName2 = document.getElementById("txtName2");
+    var email = txtName.value;
+    var password = txtName2.value;
+
+    try {
+        // Make an asynchronous request to the API endpoint
+        // Re-route this to 'http://10.0.2.5:8000/unsecure-api/accountAccessPortal?e=' when deploying to linux
+        const response = await fetch('http://10.0.2.5:8000/unsecure-api/accountAccessPortal?e=' + email + "&p=" + password,
+        { method: 'get'});
+
+        // Check if the request was successful (status code 200)
+        if (response.ok) {
+            // Get the response text
+            const text = await response.text();
+
+            // Display the response in your HTML page
+            var resultContainer = document.getElementById("resultContainer");
+            resultContainer.innerHTML = text;
+        } else {
+            // Handle the case where the request was not successful
+            console.error('Request failed with status:', response.status);
+        }
+    } catch (error) {
+        // Handle any errors that occurred during the fetch
+        console.error('Error during fetch:', error);
+    }
+}
