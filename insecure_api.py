@@ -43,7 +43,7 @@ def agePredictionPage():
 @cross_origin()
 def emailPage():
     print("User is accessing Email Login Page for Insecure API")
-    return render_template('/html/insecure/emailLogIn.html')
+    return render_template('/html/insecure/emailVerify.html')
 
 
 @app.route('/insecure/sampleSensitiveData')
@@ -114,7 +114,7 @@ def agePrediction():
 
 @app.route('/unsecure-api/email', methods=['GET'])
 @cross_origin()
-def emailLogIn():
+def emailVerify():
     email = request.args.get('email')
 
     response = ""
@@ -131,24 +131,14 @@ def emailLogIn():
 
     try:
         # Retrieve the email and username where the email matches what the user entered
-        getEmailData.execute(f'SELECT email, username, id FROM userdata WHERE email=\'{email}\'')
+        getEmailData.execute(f'SELECT email FROM userdata WHERE email=\'{email}\'')
         rows = getEmailData.fetchall()
 
         if rows:
             for row in rows:
-                username = str(row[1])
-                id = str(row[2])
+                email = str(row[0])
 
-                response = "Successfully logged in as: " + username + "<br>Here are your posts<br><br>"
-
-                getEmailData.execute(
-                    f'SELECT posts.post FROM posts INNER JOIN userdata ON posts.userdata_id = '
-                    f'userdata.id WHERE posts.userdata_id={id}')
-                rows = getEmailData.fetchall()
-                for row in rows:
-                    for i in range(len(row)):
-                        response += f"Post: {row[i]}<br>"  # Print out the text in the row alongside the column name
-                    response += "<br>"
+                response = "Successfully found email: " + email
         else:
             response = "No account with that email was found on the database"
     except:

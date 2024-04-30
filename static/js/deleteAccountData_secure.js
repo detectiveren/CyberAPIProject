@@ -1,8 +1,10 @@
 async function deleteData() {
     var txtName = document.getElementById("txtName");
     var txtName2 = document.getElementById("txtName2");
+    var txtName3 = document.getElementById("txtName3");
     var email = txtName.value;
     var password = txtName2.value;
+    var secret_answer = txtName3.value;
 
     // The secret key, it must be the exact same as the key on the Python Script
     var key = CryptoJS.enc.Utf8.parse('01234567890123456789012345678901');
@@ -13,9 +15,10 @@ async function deleteData() {
     try {
         var encryptedEmail = CryptoJS.AES.encrypt(email, key, { iv: iv }).toString();
         var encryptedPassword = CryptoJS.AES.encrypt(password, key, { iv: iv }).toString();
+        var encryptedSecretAnswer = CryptoJS.AES.encrypt(secret_answer, key, { iv: iv }).toString();
         // Make an asynchronous request to the API endpoint
         // Re-route this to 'http://10.0.2.5:9000/secure-api/eraseDataPortal?e=' when deploying to linux
-        const response = await fetch('http://10.0.2.5:9000/secure-api/eraseDataPortal?e=' + encodeURIComponent(encryptedEmail) + '&p=' + encodeURIComponent(encryptedPassword) + '&iv=' + encodeURIComponent(iv.toString(CryptoJS.enc.Base64)), {
+        const response = await fetch('http://10.0.2.5:9000/secure-api/eraseDataPortal?e=' + encodeURIComponent(encryptedEmail) + '&p=' + encodeURIComponent(encryptedPassword) + '&s=' + encodeURIComponent(encryptedSecretAnswer) + '&iv=' + encodeURIComponent(iv.toString(CryptoJS.enc.Base64)), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

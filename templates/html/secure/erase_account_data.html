@@ -4,11 +4,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width", initial-scale="1.0">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-        <Title>Erase Account Data - Secure</Title>
+        <Title>Erase Account Data - Secure API</Title>
     </head>
 
     <body>
-        <h1>Erase Account Data - Secure</h1>
+        <h1>Erase Account Data - Secure API</h1>
         <p>Securely and accurately erasing data</p>
         <p>Ensure that secure_api.py is running</p>
         <p>NOTE TO SELF: Make sure to organise the html files into secure/insecure for the APIs</p>
@@ -16,7 +16,9 @@
             <label for="txtName">Enter a valid email</label><br>
             <input type="text" id="txtName"/><br>
             <label for="txtName2">Enter a valid password</label><br>
-            <input type="text" id="txtName2"/>
+            <input type="text" id="txtName2"/><br>
+            <label for="txtName3">Enter the correct secret answer</label><br>
+            <input type="text" id="txtName3"/>
             <button type="button" onclick="deleteData()">Delete Account Data</button>
             <p id="response"></p>
             <p>The response will be sent by the API</p>

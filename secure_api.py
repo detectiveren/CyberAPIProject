@@ -64,7 +64,7 @@ def agePredictionPage():
 @cross_origin()
 def emailPage():
     print("User is accessing Email Login Page for Secure API")
-    return render_template('/html/secure/emailLogIn.html')
+    return render_template('/html/secure/emailVerify.html')
 
 
 @app.route('/secure/sampleSensitiveData')
@@ -107,13 +107,21 @@ def eraseAccountData():
 @app.route('/secure-api/say-hi', methods=['GET'])  # Set up a URL route where it will take a function
 @cross_origin()
 def helloTest():
-    encrypted_name = request.args.get('name')  # get the name of the user from "?name="
-    iv = request.args.get('iv')
+    try:
+        encrypted_name = request.args.get('name')  # get the name of the user from "?name="
+        iv = request.args.get('iv')
+    except:
+        encrypted_name = "undefined"
+        iv = "undefined"
 
     key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
-    # Decrypt the name using AES
-    cipher = AES.new(key, AES.MODE_CBC, base64.b64decode(iv))
-    decrypted_name = unpad(cipher.decrypt(base64.b64decode(encrypted_name)), AES.block_size).decode('utf-8')
+
+    try:
+        # Decrypt the name using AES
+        cipher = AES.new(key, AES.MODE_CBC, base64.b64decode(iv))
+        decrypted_name = unpad(cipher.decrypt(base64.b64decode(encrypted_name)), AES.block_size).decode('utf-8')
+    except:
+        decrypted_name = "undefined"
 
     name = str(decrypted_name)
 
@@ -131,13 +139,21 @@ def helloTest():
 @app.route('/secure-api/age-prediction', methods=['GET'])
 @cross_origin()
 def agePrediction():
-    encrypted_name = request.args.get('name')
-    iv = request.args.get('iv')
+    try:
+        encrypted_name = request.args.get('name')
+        iv = request.args.get('iv')
+    except:
+        encrypted_name = "undefined"
+        iv = "undefined"
 
     key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
-    # Decrypt the name using AES
-    cipher = AES.new(key, AES.MODE_CBC, base64.b64decode(iv))
-    decrypted_name = unpad(cipher.decrypt(base64.b64decode(encrypted_name)), AES.block_size).decode('utf-8')
+
+    try:
+        # Decrypt the name using AES
+        cipher = AES.new(key, AES.MODE_CBC, base64.b64decode(iv))
+        decrypted_name = unpad(cipher.decrypt(base64.b64decode(encrypted_name)), AES.block_size).decode('utf-8')
+    except:
+        decrypted_name = "undefined"
 
     name = str(decrypted_name)
 
@@ -155,14 +171,22 @@ def agePrediction():
 
 @app.route('/secure-api/email', methods=['GET'])
 @cross_origin()
-def emailLogIn():
-    encrypted_email = request.args.get('email')
-    iv = request.args.get('iv')
+def emailVerify():
+    try:
+        encrypted_email = request.args.get('email')
+        iv = request.args.get('iv')
+    except:
+        encrypted_email = "undefined"
+        iv = "undefined"
 
     key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
-    # Decrypt the email using AES
-    cipher = AES.new(key, AES.MODE_CBC, base64.b64decode(iv))
-    decrypted_email = unpad(cipher.decrypt(base64.b64decode(encrypted_email)), AES.block_size).decode('utf-8')
+
+    try:
+        # Decrypt the email using AES
+        cipher = AES.new(key, AES.MODE_CBC, base64.b64decode(iv))
+        decrypted_email = unpad(cipher.decrypt(base64.b64decode(encrypted_email)), AES.block_size).decode('utf-8')
+    except:
+        decrypted_email = "undefined"
 
     email = decrypted_email
     sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
@@ -191,24 +215,14 @@ def emailLogIn():
 
     try:
         # Retrieve the email and username where the email matches what the user entered
-        getEmailData.execute(f'SELECT email, username, id FROM userdata WHERE email=\'{email}\'')
+        getEmailData.execute(f'SELECT email FROM userdata WHERE email=\'{email}\'')
         rows = getEmailData.fetchall()
 
         if rows:
             for row in rows:
-                username = str(row[1])
-                id = str(row[2])
+                email = str(row[0])
 
-                response = "Successfully logged in as: " + username + "<br>Here are your posts<br><br>"
-
-                getEmailData.execute(
-                    f'SELECT posts.post FROM posts INNER JOIN userdata ON posts.userdata_id = '
-                    f'userdata.id WHERE posts.userdata_id={id}')
-                rows = getEmailData.fetchall()
-                for row in rows:
-                    for i in range(len(row)):
-                        response += f"Post: {row[i]}<br>"  # Print out the text in the row alongside the column name
-                    response += "<br>"
+                response = "Successfully found email: " + email
         else:
             response = "No account with that email was found on the database"
     except:
@@ -222,7 +236,10 @@ def emailLogIn():
 @app.route('/secure-api/sampleData', methods=['GET'])
 @cross_origin()
 def sampleData():
-    sampleDataFile = request.args.get('sampleDataNumber')  # Grab the number input
+    try:
+        sampleDataFile = request.args.get('sampleDataNumber')  # Grab the number input
+    except:
+        sampleDataFile = "0"
 
     sampleDataFileNumber = int(sampleDataFile)  # Convert it into an integer
 
@@ -249,20 +266,77 @@ def sampleData():
 @app.route('/secure-api/grabSQLdata', methods=['GET'])  # User SQL database
 @cross_origin()
 def getSQLiteData():
-    sqlDataNumber = request.args.get('sqlNumber')  # Grab the number input
+    try:
+        encrypted_email = base64.b64decode(request.args.get('e'))
+        encrypted_password = base64.b64decode(request.args.get('p'))
+        encrypted_secret_answer = base64.b64decode(request.args.get('s'))
+        encrypted_userID = base64.b64decode(request.args.get('id'))
+        iv = base64.b64decode(request.args.get('iv'))
+    except:
+        encrypted_email = "undefined"
+        encrypted_password = "undefined"
+        encrypted_secret_answer = "undefined"
+        encrypted_userID = "undefined"
+        iv = "undefined"
+
+    key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
+
+    try:
+        # Decrypt the email and password using AES
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_email = unpad(cipher.decrypt(encrypted_email), AES.block_size).decode('utf-8')
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_password = unpad(cipher.decrypt(encrypted_password), AES.block_size).decode('utf-8')
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_secret_answer = unpad(cipher.decrypt(encrypted_secret_answer), AES.block_size).decode('utf-8')
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_userID = unpad(cipher.decrypt(encrypted_userID), AES.block_size).decode('utf-8')
+    except:
+        decrypted_email = "undefined"
+        decrypted_password = "undefined"
+        decrypted_secret_answer = "undefined"
+        decrypted_userID = "undefined"
+
+    email = decrypted_email
+    password = decrypted_password
+    secret_answer = decrypted_secret_answer
+    userID = decrypted_userID
     sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
                                 "\'; DROP TABLE posts; --", ";", "--"]
     # List of strings that are used in SQL Injection Attacks
 
-    if any(sql_injection_type in sqlDataNumber for sql_injection_type in sql_injection_prevention):
+    if any(sql_injection_type in email for sql_injection_type in sql_injection_prevention):
         # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
         # by resetting the value to "0" or "invalid"
         print("SQL INJECTION ATTEMPT BLOCKED")
-        print("Attempted input: " + sqlDataNumber)
-        sqlDataNumber = "0"
-        print("Value for sqlDataNumber was reset to: " + sqlDataNumber)
+        print("Attempted input: " + email)
+        email = "Invalid"
+        print("Value for email was reset to: " + email)
 
-    randomNumber = int(sqlDataNumber)
+    if any(sql_injection_type in password for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + password)
+        password = "Invalid"
+        print("Value for password was reset to: " + password)
+
+    if any(sql_injection_type in secret_answer for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + secret_answer)
+        secret_answer = "invalid"
+        print("Value for secret_answer was reset to: " + secret_answer)
+
+    if any(sql_injection_type in userID for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + userID)
+        userID = "0"
+        print("Value for userID was reset to: " + userID)
+
     # Error message if it is the SQL database fails for some reason
     response = ""
     # Connect to the userdata db
@@ -271,16 +345,37 @@ def getSQLiteData():
     # Create cursor object
     cur = conn.cursor()
 
-    # Query the database
-    cur.execute(f'SELECT * FROM userdata WHERE id={randomNumber}')
-    rows = cur.fetchall()
+    try:
+        # Retrieve the email and username where the email matches what the user entered
+        cur.execute(
+            f'SELECT id FROM userdata WHERE email=\'{email}\' AND password =\'{password}\' AND secret_answer=\'{secret_answer}\'')
+        rows = cur.fetchall()
 
-    # Get column names
-    column_names = [description[0] for description in cur.description]
+        if rows:
+            for row in rows:
+                loggedInUserID = str(row[0])
+                cur.execute(f'SELECT EXISTS (SELECT 1 FROM admin WHERE userdata_id = ?)', (loggedInUserID,))
+                isUserAdmin = cur.fetchone()[0]
 
-    for row in rows:
-        for i in range(len(row)):
-            response += f"{column_names[i]}: {row[i]} \n <br>"  # Print out the text in the row alongside the column name
+                if isUserAdmin:
+                    # Query the database
+                    cur.execute(f'SELECT * FROM userdata WHERE id={userID}')
+                    rows = cur.fetchall()
+
+                    # Get column names
+                    column_names = [description[0] for description in cur.description]
+
+                    for row in rows:
+                        for i in range(len(row)):
+                            response += f"{column_names[i]}: {row[i]} \n <br>"  # Print out the text in the row alongside the column name
+                else:
+                    response = "User is not admin and therefore has no access to this information"
+
+        else:
+            response = "No account with that email and/or password was found on the database"
+    except sqlite3.Error as e:
+        response = "Error with database"
+        print(e)
 
     encrypted_data_b64, key_b64 = newGenerateKey(response)
     return jsonify({"Token": encrypted_data_b64, "Key": key_b64})
@@ -289,7 +384,10 @@ def getSQLiteData():
 @app.route('/secure-api/grabUserPosts', methods=['GET'])
 @cross_origin()
 def grabUserPosts():
-    userID = request.args.get('userID')  # Grab the user id
+    try:
+        userID = request.args.get('userID')  # Grab the user id
+    except:
+        userID = "0"
     sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
                                 "\'; DROP TABLE posts; --", ";", "--"]
     # List of strings that are used in SQL Injection Attacks
@@ -332,19 +430,34 @@ def grabUserPosts():
 @app.route('/secure-api/accountAccessPortal', methods=['GET'])
 @cross_origin()
 def accessAccountPortal():
-    encrypted_email = base64.b64decode(request.args.get('e'))
-    encrypted_password = base64.b64decode(request.args.get('p'))
-    iv = base64.b64decode(request.args.get('iv'))
+    try:
+        encrypted_email = base64.b64decode(request.args.get('e'))
+        encrypted_password = base64.b64decode(request.args.get('p'))
+        encrypted_secret_answer = base64.b64decode(request.args.get('s'))
+        iv = base64.b64decode(request.args.get('iv'))
+    except:
+        encrypted_email = "undefined"
+        encrypted_password = "undefined"
+        encrypted_secret_answer = "undefined"
+        iv = "undefined"
 
     key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
     # Decrypt the email and password using AES
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted_email = unpad(cipher.decrypt(encrypted_email), AES.block_size).decode('utf-8')
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted_password = unpad(cipher.decrypt(encrypted_password), AES.block_size).decode('utf-8')
+    try:
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_email = unpad(cipher.decrypt(encrypted_email), AES.block_size).decode('utf-8')
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_password = unpad(cipher.decrypt(encrypted_password), AES.block_size).decode('utf-8')
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_secret_answer = unpad(cipher.decrypt(encrypted_secret_answer), AES.block_size).decode('utf-8')
+    except:
+        decrypted_email = "undefined"
+        decrypted_password = "undefined"
+        decrypted_secret_answer = "undefined"
 
     email = decrypted_email
     password = decrypted_password
+    secret_answer = decrypted_secret_answer
     sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
                                 "\'; DROP TABLE posts; --", ";", "--"]
     # List of strings that are used in SQL Injection Attacks
@@ -363,7 +476,15 @@ def accessAccountPortal():
         print("SQL INJECTION ATTEMPT BLOCKED")
         print("Attempted input: " + password)
         password = "invalid"
-        print("Value for password was reset to: " + email)
+        print("Value for password was reset to: " + password)
+
+    if any(sql_injection_type in secret_answer for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + secret_answer)
+        secret_answer = "invalid"
+        print("Value for secret answer was reset to: " + secret_answer)
 
     response = ""
 
@@ -380,7 +501,7 @@ def accessAccountPortal():
     try:
         # Retrieve the email and username where the email matches what the user entered
         getAccountData.execute(
-            f'SELECT email, username, id FROM userdata WHERE email=\'{email}\' AND password =\'{password}\'')
+            f'SELECT email, username, id FROM userdata WHERE email=\'{email}\' AND password =\'{password}\' AND secret_answer=\'{secret_answer}\'')
         rows = getAccountData.fetchall()
 
         if rows:
@@ -413,19 +534,34 @@ def accessAccountPortal():
 @app.route('/secure-api/eraseDataPortal', methods=['GET'])
 @cross_origin()
 def eraseDataPortal():
-    encrypted_email = base64.b64decode(request.args.get('e'))
-    encrypted_password = base64.b64decode(request.args.get('p'))
-    iv = base64.b64decode(request.args.get('iv'))
+    try:
+        encrypted_email = base64.b64decode(request.args.get('e'))  # Grabbing the values from the parameters
+        encrypted_password = base64.b64decode(request.args.get('p'))
+        encrypted_secret_answer = base64.b64decode(request.args.get('s'))
+        iv = base64.b64decode(request.args.get('iv'))
+    except:
+        encrypted_email = "undefined"
+        encrypted_password = "undefined"
+        encrypted_secret_answer = "undefined"
+        iv = "undefined"
 
     key = b'01234567890123456789012345678901'  # The secret key, it must be the exact same as the key on the JS Script
     # Decrypt the email and password using AES
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted_email = unpad(cipher.decrypt(encrypted_email), AES.block_size).decode('utf-8')
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted_password = unpad(cipher.decrypt(encrypted_password), AES.block_size).decode('utf-8')
+    try:
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_email = unpad(cipher.decrypt(encrypted_email), AES.block_size).decode('utf-8')
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_password = unpad(cipher.decrypt(encrypted_password), AES.block_size).decode('utf-8')
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_secret_answer = unpad(cipher.decrypt(encrypted_secret_answer), AES.block_size).decode('utf-8')
+    except:
+        decrypted_email = "undefined"
+        decrypted_password = "undefined"
+        decrypted_secret_answer = "undefined"
 
     email = decrypted_email
     password = decrypted_password
+    secret_answer = decrypted_secret_answer
     sql_injection_prevention = ['\'--', '\' true--', '\'', "\' OR \'1\'=\'1\' --", "\'; DROP TABLE userdata; --",
                                 "\'; DROP TABLE posts; --", ";", "--"]
     # List of strings that are used in SQL Injection Attacks
@@ -444,7 +580,15 @@ def eraseDataPortal():
         print("SQL INJECTION ATTEMPT BLOCKED")
         print("Attempted input: " + password)
         password = "invalid"
-        print("Value for password was reset to: " + email)
+        print("Value for password was reset to: " + password)
+
+    if any(sql_injection_type in secret_answer for sql_injection_type in sql_injection_prevention):
+        # If those SQL Injection strings are found, tell the API that an attempt was made and that it was blocked
+        # by resetting the value to "0" or "invalid"
+        print("SQL INJECTION ATTEMPT BLOCKED")
+        print("Attempted input: " + secret_answer)
+        secret_answer = "invalid"
+        print("Value for secret answer was reset to: " + secret_answer)
 
     response = ""
 
@@ -461,7 +605,7 @@ def eraseDataPortal():
     try:
         # Retrieve the email and username where the email matches what the user entered
         eraseAccountData.execute(
-            f'SELECT email, username, id FROM userdata WHERE email=\'{email}\' AND password =\'{password}\'')
+            f'SELECT email, username, id FROM userdata WHERE email=\'{email}\' AND password =\'{password}\' AND secret_answer=\'{secret_answer}\'')
         rows = eraseAccountData.fetchall()
 
         if rows:
@@ -470,11 +614,18 @@ def eraseDataPortal():
                 id = str(row[2])
                 print(id)
 
-                eraseAccountData.execute(f'DELETE FROM userdata WHERE id=\'{id}\'')
-                print("Deleted user: ", username)
-                print("Deleted posts associated with user: ", username)
-                eraseAccountData.execute(f'DELETE FROM posts WHERE userdata_id=\'{id}\'')
-                response = "Successfully deleted account: " + username
+                loggedInUserID = str(row[2])
+                eraseAccountData.execute(f'SELECT EXISTS (SELECT 1 FROM admin WHERE userdata_id = ?)', (loggedInUserID,))
+                isUserAdmin = eraseAccountData.fetchone()[0]
+
+                if isUserAdmin:
+                    response = "It is not possible to erase an admin account"
+                else:
+                    eraseAccountData.execute(f'DELETE FROM userdata WHERE id=\'{id}\'')
+                    print("Deleted user: ", username)
+                    print("Deleted posts associated with user: ", username)
+                    eraseAccountData.execute(f'DELETE FROM posts WHERE userdata_id=\'{id}\'')
+                    response = "Successfully deleted account: " + username
             conn.commit()
         else:
             response = "No account with that email and/or password was found on the database"

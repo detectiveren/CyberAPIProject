@@ -4,7 +4,7 @@ async function sqlData() {
     }
 
 
-    var num = getRandomInteger(9)
+    var num = getRandomInteger(15)
 
     try {
         // Make an asynchronous request to the API endpoint

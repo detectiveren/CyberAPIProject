@@ -4,15 +4,24 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width", initial-scale="1.0">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-        <Title>SQL Data API - Secure</Title>
+        <Title>SQL Data - Secure API</Title>
     </head>
 
     <body>
-        <h1>Press the button to retrieve user data - Secure</h1>
+        <h1>Display Account Details By User ID - Secure API</h1>
         <p>Ensure that secure_api.py is running</p>
+        <p>Ensure you login as admin as you will need that to retrieve the data on this page</p>
         <p>NOTE TO SELF: Make sure to organise the html files into secure/insecure for the APIs</p>
         <div class="center">
-            <button type="button" onclick="sqlData()">Random Test Sensitive User Data</button>
+            <label for="txtName">Enter admin email</label><br>
+            <input type="text" id="txtName"/><br>
+            <label for="txtName2">Enter admin password</label><br>
+            <input type="text" id="txtName2"/><br>
+            <label for="txtName3">Enter the correct secret answer</label><br>
+            <input type="text" id="txtName3"/></br>
+            <label for="txtName4">Enter a user ID to display the account details</label><br>
+            <input type="text" id="txtName4"/>
+            <button type="button" onclick="sqlData()">Display Account Info</button>
             <p id="response"></p>
             <p>The response will be sent by the API</p>
             <div id="resultContainer"></div>

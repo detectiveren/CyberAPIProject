@@ -1,4 +1,4 @@
-async function sendName() {
+async function verifyEmail() {
     var txtName = document.getElementById("txtName");
     var email = txtName.value;
 
